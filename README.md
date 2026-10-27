@@ -60,6 +60,18 @@ See Neon's [Set up OAuth](https://neon.com/docs/auth/guides/setup-oauth) guide f
 
 Next.js must run on port 3000, because that is the origin Realtime allows in `neon.ts`. If port 3000 is busy, the live screens stay stuck on connecting.
 
+## End-to-end tests
+
+`npm run e2e` plays real games in Chrome with Playwright: a host builds a quiz from scratch (multiple correct answers, double and no-points questions, a timeout), runs it with several players, removes and locks out players, and then edits and re-hosts. Every stored score is checked against the formula, and the final screens, report and CSV are checked against the database. A second test plays the sample quiz to the podium.
+
+```bash
+npx playwright install chromium     # once; or set PLAYWRIGHT_CHANNEL=chrome to use your installed Chrome
+npm run e2e                         # starts the dev server on port 3000
+E2E_BASE_URL=https://your-app.vercel.app npm run e2e   # or test a deployment
+```
+
+The suite reads `DATABASE_URL` from `.env.local` to audit scores. Its hosts sign up as `popquiz.e2e+…@example.com`, and their quizzes and games are deleted after the run. The test accounts stay in Neon Auth.
+
 ## Deploy to Vercel
 
 1. Import the repo in Vercel, or run `npx vercel`.

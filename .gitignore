@@ -9,3 +9,5 @@ node_modules/
 next-env.d.ts
 .impeccable/review
 .vercel
+test-results/
+playwright-report/
