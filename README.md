@@ -98,6 +98,8 @@ npm run e2e                         # starts the dev server on port 3000
 E2E_BASE_URL=https://your-app.vercel.app npm run e2e   # or test a deployment
 ```
 
+`STRESS=1 npm run e2e -- stress.spec.ts` is an opt-in load test: 50 browser players (`PLAYERS`) spread over 5 Chrome processes (`BROWSERS`) join and play a full game, and every phone's verdict and score, the leaderboard after each question, the podium, the final standings and the CSV are checked against the database. It prints join, question-delivery and answer latencies. Those include your own machine, so keep `BROWSERS` high; 50 tabs in one Chrome measure the laptop, not the app.
+
 The suite reads `DATABASE_URL` from `.env.local` to audit scores. Its hosts sign up as `popquiz.e2e+…@example.com`, and their quizzes and games are deleted after the run. The test accounts stay in Neon Auth.
 
 ## Deploy to Vercel
