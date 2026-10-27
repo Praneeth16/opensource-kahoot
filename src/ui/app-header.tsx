@@ -11,7 +11,12 @@ export function AppHeader({ email }: { email: string }) {
         <Link aria-label="Dashboard" href="/dashboard">
           <Wordmark />
         </Link>
-        <UserMenu email={email} />
+        <div className="flex items-center gap-1">
+          <Link className="btn-ghost text-sm" href="/connect">
+            AI assistants
+          </Link>
+          <UserMenu email={email} />
+        </div>
       </div>
     </header>
   );

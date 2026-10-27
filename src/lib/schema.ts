@@ -171,3 +171,23 @@ export type Quiz = typeof quizzes.$inferSelect;
 export type Question = typeof questions.$inferSelect;
 export type Choice = typeof choices.$inferSelect;
 export type Game = typeof games.$inferSelect;
+
+// Personal access tokens for the MCP endpoint (/api/mcp). Only the sha256 is stored; the token is shown
+// once on /connect. Revoking sets revoked_at, so last use stays visible.
+export const apiTokens = pgTable(
+  "api_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    owner_id: uuid("owner_id").notNull(),
+    name: text("name").notNull(),
+    token_hash: text("token_hash").notNull(),
+    prefix: text("prefix").notNull(),
+    created_at: createdAt(),
+    last_used_at: timestamp("last_used_at", { withTimezone: true }),
+    revoked_at: timestamp("revoked_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("api_tokens_hash_idx").on(t.token_hash),
+    index("api_tokens_owner_idx").on(t.owner_id, t.created_at),
+  ],
+);

@@ -22,6 +22,7 @@ export default defineConfig({
     "games",
     "players",
     "answers",
+    "api_tokens",
   ],
   dbCredentials: {
     url: process.env.DATABASE_URL,

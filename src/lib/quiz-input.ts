@@ -29,9 +29,18 @@ const question = z
   .refine((q) => q.choices.some((c) => c.is_correct), {
     message: "Mark at least one correct answer",
   })
-  .refine((q) => q.kind !== "truefalse" || q.choices.length === 2, {
-    message: "True or false questions have two answers",
-  });
+  .refine(
+    (q) =>
+      q.kind !== "truefalse" ||
+      (q.choices.length === 2 &&
+        q.choices[0]!.body === "True" &&
+        q.choices[1]!.body === "False" &&
+        q.choices.filter((c) => c.is_correct).length === 1),
+    {
+      message:
+        'True or false questions have the answers "True" then "False", with exactly one correct',
+    },
+  );
 
 export const quizInput = z.object({
   id: z.uuid(),

@@ -11,8 +11,12 @@ export const db = new Pool({
   allowExitOnIdle: true,
 });
 
-/** Deletes every quiz (and with it, its snapshots, games, players and answers) of the suite's hosts. */
+/** Deletes the suite's hosts' API tokens and quizzes (with their snapshots, games, players, answers). */
 export async function cleanup() {
+  await db.query(
+    `DELETE FROM api_tokens WHERE owner_id IN (SELECT id FROM neon_auth."user" WHERE email LIKE $1)`,
+    [TEST_EMAIL_LIKE],
+  );
   await db.query(
     `DELETE FROM quizzes WHERE owner_id IN (SELECT id FROM neon_auth."user" WHERE email LIKE $1)`,
     [TEST_EMAIL_LIKE],

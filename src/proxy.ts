@@ -15,5 +15,11 @@ export default function proxy(request: NextRequest) {
 // Host pages only. /, /join and /play are public (players have no account); /api routes answer 401
 // themselves. proxy.ts isn't the security boundary: every page, action and route checks again.
 export const config = {
-  matcher: ["/dashboard", "/quizzes/:path*", "/host/:path*", "/reports/:path*"],
+  matcher: [
+    "/dashboard",
+    "/connect",
+    "/quizzes/:path*",
+    "/host/:path*",
+    "/reports/:path*",
+  ],
 };

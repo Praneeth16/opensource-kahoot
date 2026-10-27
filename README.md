@@ -60,9 +60,37 @@ See Neon's [Set up OAuth](https://neon.com/docs/auth/guides/setup-oauth) guide f
 
 Next.js must run on port 3000, because that is the origin Realtime allows in `neon.ts`. If port 3000 is busy, the live screens stay stuck on connecting.
 
+## Use with Claude, Codex and other AI assistants
+
+PopQuiz is an MCP server too, at `https://<your-app>/api/mcp` (Streamable HTTP). Ask your assistant to write a quiz, host it and read the results, for example: _"Create a 10-question quiz about the solar system, mix in a few true or false questions, then host it."_ A person still runs the game on the big screen.
+
+1. Sign in, open **AI assistants** (`/connect`) and create a personal access token. It is shown once and can be revoked there.
+2. Add the server. The page fills in your URL and token:
+
+```bash
+# Claude Code
+claude mcp add --transport http popquiz https://<your-app>/api/mcp \
+  --header "Authorization: Bearer <token>"
+
+# Codex
+export POPQUIZ_TOKEN=<token>
+codex mcp add popquiz --url https://<your-app>/api/mcp --bearer-token-env-var POPQUIZ_TOKEN
+```
+
+Codex asks before each tool call. To skip that, which `codex exec` needs, add `default_tools_approval_mode = "approve"` under `[mcp_servers.popquiz]` in `~/.codex/config.toml`. Cursor and other clients take `{ "url": …, "headers": { "Authorization": "Bearer <token>" } }`. Claude Desktop connects through `npx mcp-remote <url> --header "Authorization: Bearer <token>"`.
+
+| Tool                                        | What it does                                                    |
+| ------------------------------------------- | --------------------------------------------------------------- |
+| `list_quizzes`, `get_quiz`                  | Read your quizzes                                               |
+| `create_quiz`, `update_quiz`, `delete_quiz` | Write them, with the same validation as the editor              |
+| `host_game`                                 | Open a lobby and return the PIN, host screen link and join link |
+| `list_games`, `get_results`                 | Standings and per-question accuracy                             |
+
+A token only reaches its own host's quizzes and games. Games play a frozen copy of the quiz, so an assistant editing a quiz never changes a running or finished game.
+
 ## End-to-end tests
 
-`npm run e2e` plays real games in Chrome with Playwright: a host builds a quiz from scratch (multiple correct answers, double and no-points questions, a timeout), runs it with several players, removes and locks out players, and then edits and re-hosts. Every stored score is checked against the formula, and the final screens, report and CSV are checked against the database. A second test plays the sample quiz to the podium.
+`npm run e2e` plays real games in Chrome with Playwright: a host builds a quiz from scratch (multiple correct answers, double and no-points questions, a timeout), runs it with several players, removes and locks out players, and then edits and re-hosts. Every stored score is checked against the formula, and the final screens, report and CSV are checked against the database. A second test plays the sample quiz to the podium, and a third drives the MCP server with an MCP client: it creates a quiz, hosts it for players in browsers, reads the results, and checks token revocation and isolation between hosts.
 
 ```bash
 npx playwright install chromium     # once; or set PLAYWRIGHT_CHANNEL=chrome to use your installed Chrome
