@@ -1,0 +1,35 @@
+/* Loaded only on the auth pages, by src/app/(auth)/layout.tsx. source(none): globals.css already has the
+   app's classes, so this sheet adds only auth-ui's. */
+@import "tailwindcss" source(none);
+@import "@neondatabase/auth-ui/tailwind";
+
+/* Managed Better Auth UI in the PopQuiz palette. */
+:root {
+  --background: #f9f7f4;
+  --foreground: #1b3139;
+  --card: #ffffff;
+  --card-foreground: #1b3139;
+  --popover: #ffffff;
+  --popover-foreground: #1b3139;
+  --primary: #db2b12;
+  --primary-foreground: #ffffff;
+  --secondary: #eeede9;
+  --secondary-foreground: #1b3139;
+  --muted: #eeede9;
+  --muted-foreground: #5a6f77;
+  --accent: #eeede9;
+  --accent-foreground: #1b3139;
+  --destructive: #db2b12;
+  --border: #e2dfd8;
+  --input: #e2dfd8;
+  --ring: #db2b12;
+  --neon-radius: 0.75rem;
+}
+
+/* auth-ui re-imports Tailwind, which resets the font stack. Keep DM Sans on the auth pages too. */
+:root {
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+body {
+  font-family: var(--font-sans);
+}

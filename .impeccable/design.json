@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-27T00:00:00Z",
+  "title": "Design System: PopQuiz",
+  "extensions": {
+    "colorMeta": {
+      "oat": { "role": "neutral", "displayName": "Oat Paper", "canonical": "#f9f7f4", "tonalRamp": ["#2b2925", "#4a4741", "#6d6a63", "#938f87", "#bbb7ae", "#e2dfd8", "#eeede9", "#f9f7f4"] },
+      "oat-200": { "role": "neutral", "displayName": "Oat Shade", "canonical": "#eeede9", "tonalRamp": ["#2b2925", "#4a4741", "#6d6a63", "#938f87", "#bbb7ae", "#e2dfd8", "#eeede9", "#f9f7f4"] },
+      "oat-300": { "role": "neutral", "displayName": "Oat Rule", "canonical": "#e2dfd8", "tonalRamp": ["#2b2925", "#4a4741", "#6d6a63", "#938f87", "#bbb7ae", "#e2dfd8", "#eeede9", "#f9f7f4"] },
+      "white": { "role": "neutral", "displayName": "White Surface", "canonical": "#ffffff" },
+      "navy": { "role": "neutral", "displayName": "Navy Ink", "canonical": "#1b3139", "tonalRamp": ["#0e1c21", "#1b3139", "#2f4a54", "#5a6f77", "#82949a", "#aab8bd", "#d2dbde", "#edf1f2"] },
+      "navy-700": { "role": "neutral", "displayName": "Navy Hover", "canonical": "#2f4a54", "tonalRamp": ["#0e1c21", "#1b3139", "#2f4a54", "#5a6f77", "#82949a", "#aab8bd", "#d2dbde", "#edf1f2"] },
+      "navy-500": { "role": "neutral", "displayName": "Navy Mute", "canonical": "#5a6f77", "tonalRamp": ["#0e1c21", "#1b3139", "#2f4a54", "#5a6f77", "#82949a", "#aab8bd", "#d2dbde", "#edf1f2"] },
+      "lava": { "role": "primary", "displayName": "Lava Signal", "canonical": "#ff3621", "tonalRamp": ["#4a0d05", "#8a1a0a", "#c42510", "#db2b12", "#ff3621", "#ff7a68", "#ffc2b8", "#fff0ed"] },
+      "lava-600": { "role": "primary", "displayName": "Lava Action", "canonical": "#db2b12", "tonalRamp": ["#4a0d05", "#8a1a0a", "#c42510", "#db2b12", "#ff3621", "#ff7a68", "#ffc2b8", "#fff0ed"] },
+      "lava-700": { "role": "primary", "displayName": "Lava Press", "canonical": "#c42510", "tonalRamp": ["#4a0d05", "#8a1a0a", "#c42510", "#db2b12", "#ff3621", "#ff7a68", "#ffc2b8", "#fff0ed"] },
+      "lava-50": { "role": "primary", "displayName": "Lava Wash", "canonical": "#fff0ed", "tonalRamp": ["#4a0d05", "#8a1a0a", "#c42510", "#db2b12", "#ff3621", "#ff7a68", "#ffc2b8", "#fff0ed"] },
+      "blue": { "role": "secondary", "displayName": "Diamond Blue", "canonical": "#2272b4", "tonalRamp": ["#0a2238", "#123c61", "#1a568a", "#2272b4", "#4f93cc", "#86b6de", "#bdd8ee", "#ebf3fa"] },
+      "gold": { "role": "secondary", "displayName": "Circle Gold", "canonical": "#ffab00", "tonalRamp": ["#3d2900", "#6b4800", "#9e6a00", "#d18c00", "#ffab00", "#ffc54d", "#ffdf99", "#fff6e0"] },
+      "green-600": { "role": "secondary", "displayName": "Square Green", "canonical": "#00875c", "tonalRamp": ["#00281b", "#004a33", "#00684a", "#00875c", "#00a972", "#4dc79e", "#99e0c8", "#e6f6f0"] }
+    },
+    "typographyMeta": {
+      "stage-pin": { "displayName": "Stage PIN", "purpose": "The lobby PIN on the host stage, split 3+3." },
+      "display": { "displayName": "Display", "purpose": "The question on the host stage; 2.25rem below lg." },
+      "headline": { "displayName": "Headline", "purpose": "Stage titles, phone verdicts, landing heading." },
+      "title": { "displayName": "Title", "purpose": "Section heads and secondary stage lines." },
+      "body": { "displayName": "Body", "purpose": "Page copy and metadata." },
+      "label": { "displayName": "Label", "purpose": "Field labels, chips, button text." },
+      "mono-figure": { "displayName": "Mono Figure", "purpose": "Timer seconds, the PIN field, PINs and IDs. Never scores." }
+    },
+    "shadows": [
+      { "name": "lift", "value": "0 1px 2px rgb(27 49 57 / 0.06), 0 8px 24px -12px rgb(27 49 57 / 0.18)", "purpose": "The single elevation: PIN field, QR card, phone answer tiles, picked badge, leaderboard rows." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The one easing for every authored animation." },
+      { "name": "rise", "value": "rise 0.5s ease-out-expo both (translateY 12px to 0)", "purpose": "Lobby players, leaderboard rows, podium names entering." },
+      { "name": "grow-up", "value": "grow-up 0.9s ease-out-expo both (scaleY 0 to 1, origin bottom)", "purpose": "Distribution bars and podium blocks." },
+      { "name": "pop", "value": "pop 0.45s ease-out-expo both (0.92, 1.04, 1)", "purpose": "Phone verdicts, picked badge, final rank." },
+      { "name": "button-press", "value": "150ms background-color, color, transform; translateY(1px) on active", "purpose": "All buttons." },
+      { "name": "reveal-drain", "value": "500ms colors", "purpose": "Wrong answer tiles fading to Oat after reveal." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one Lava action on a screen.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M7 4.5v15l12-7.5z\" fill=\"currentColor\"/></svg>Host</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border: none; border-radius: 12px; background: var(--color-lava-600, #db2b12); color: #fff; font: 600 15px/1 var(--font-sans, 'DM Sans', sans-serif); cursor: pointer; transition: background-color 150ms, color 150ms, transform 150ms; } .ds-btn-primary:hover { background: #c42510; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 2px solid #db2b12; outline-offset: 2px; } .ds-btn-primary:disabled { background: #e2dfd8; color: #5a6f77; cursor: not-allowed; }"
+    },
+    {
+      "name": "Primary Button Large",
+      "kind": "button",
+      "refersTo": "button-primary-lg",
+      "description": "Move-forward actions: Enter, Start game, Next question.",
+      "html": "<button class=\"ds-btn-primary-lg\">Start game</button>",
+      "css": ".ds-btn-primary-lg { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 56px; padding: 0 24px; border: none; border-radius: 16px; background: #db2b12; color: #fff; font: 600 18px/1 'DM Sans', sans-serif; cursor: pointer; transition: background-color 150ms, transform 150ms; } .ds-btn-primary-lg:hover { background: #c42510; } .ds-btn-primary-lg:active { transform: translateY(1px); } .ds-btn-primary-lg:focus-visible { outline: 2px solid #db2b12; outline-offset: 2px; }"
+    },
+    {
+      "name": "Dark Button",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "The second strong action.",
+      "html": "<button class=\"ds-btn-dark\">Back to dashboard</button>",
+      "css": ".ds-btn-dark { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: none; border-radius: 12px; background: #1b3139; color: #fff; font: 600 15px/1 'DM Sans', sans-serif; cursor: pointer; transition: background-color 150ms, transform 150ms; } .ds-btn-dark:hover { background: #2f4a54; } .ds-btn-dark:active { transform: translateY(1px); } .ds-btn-dark:focus-visible { outline: 2px solid #db2b12; outline-offset: 2px; }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Secondary actions: Reveal now, View report.",
+      "html": "<button class=\"ds-btn-quiet\">Reveal now</button>",
+      "css": ".ds-btn-quiet { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid #e2dfd8; border-radius: 12px; background: #fff; color: #1b3139; font: 600 15px/1 'DM Sans', sans-serif; cursor: pointer; transition: background-color 150ms, transform 150ms; } .ds-btn-quiet:hover { background: #eeede9; } .ds-btn-quiet:active { transform: translateY(1px); } .ds-btn-quiet:focus-visible { outline: 2px solid #db2b12; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Header and row actions.",
+      "html": "<button class=\"ds-btn-ghost\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"m13.5 6.5 4 4\"/></svg>Edit</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: none; border-radius: 12px; background: transparent; color: #5a6f77; font: 600 15px/1 'DM Sans', sans-serif; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-btn-ghost:hover { background: #eeede9; color: #1b3139; } .ds-btn-ghost:focus-visible { outline: 2px solid #db2b12; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Editor and auth fields.",
+      "html": "<label class=\"ds-field-label\">Quiz title</label><input class=\"ds-input\" placeholder=\"Untitled quiz\">",
+      "css": ".ds-field-label { display: block; margin-bottom: 6px; font: 600 14px/1.4 'DM Sans', sans-serif; color: #1b3139; } .ds-input { width: 100%; padding: 10px 14px; border: 1px solid #e2dfd8; border-radius: 12px; background: #fff; color: #1b3139; font: 400 16px/1.5 'DM Sans', sans-serif; outline: none; transition: border-color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: #5a6f77; } .ds-input:hover { border-color: rgb(90 111 119 / 0.4); } .ds-input:focus { border-color: #db2b12; box-shadow: 0 0 0 3px rgb(255 54 33 / 0.15); }"
+    },
+    {
+      "name": "PIN Field",
+      "kind": "input",
+      "refersTo": "pin-field",
+      "description": "The landing page's whole job: a huge centred mono PIN.",
+      "html": "<input class=\"ds-pin\" inputmode=\"numeric\" maxlength=\"6\" placeholder=\"6-digit PIN\">",
+      "css": ".ds-pin { width: 100%; max-width: 384px; height: 80px; border: 2px solid #e2dfd8; border-radius: 16px; background: #fff; color: #1b3139; text-align: center; font: 500 48px/1 'DM Mono', monospace; letter-spacing: 0.2em; font-variant-numeric: tabular-nums; box-shadow: 0 1px 2px rgb(27 49 57 / 0.06), 0 8px 24px -12px rgb(27 49 57 / 0.18); outline: none; } .ds-pin::placeholder { font: 400 24px 'DM Sans', sans-serif; letter-spacing: normal; color: #5a6f77; } .ds-pin:focus { border-color: #1b3139; }"
+    },
+    {
+      "name": "Answer Tiles",
+      "kind": "custom",
+      "refersTo": "answer-tile-triangle",
+      "description": "The quartet, each colour with its shape. Third tile shows the post-reveal wrong state.",
+      "html": "<div class=\"ds-tiles\"><div class=\"ds-tile ds-t0\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 3.5 21.5 20h-19z\"/></svg>UNIQUE</div><div class=\"ds-tile ds-t1\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 2.5 21.5 12 12 21.5 2.5 12z\"/></svg>DISTINCT</div><div class=\"ds-tile ds-t2\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><circle cx=\"12\" cy=\"12\" r=\"9.5\"/></svg>SINGLE</div><div class=\"ds-tile ds-wrong\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><rect x=\"3.5\" y=\"3.5\" width=\"17\" height=\"17\" rx=\"1.5\"/></svg>ONLY</div></div>",
+      "css": ".ds-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .ds-tile { display: flex; align-items: center; gap: 16px; min-height: 96px; padding: 0 20px; border-radius: 14px; font: 600 24px/1.2 'DM Sans', sans-serif; transition: background-color 500ms, color 500ms; } .ds-tile svg { width: 36px; height: 36px; flex-shrink: 0; } .ds-t0 { background: #ff3621; color: #fff; } .ds-t1 { background: #2272b4; color: #fff; } .ds-t2 { background: #ffab00; color: #1b3139; } .ds-t3 { background: #00875c; color: #fff; } .ds-wrong { background: #eeede9; color: #5a6f77; }"
+    },
+    {
+      "name": "Timer Bar",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Navy fill draining across an Oat track; Lava in the last five seconds.",
+      "html": "<div class=\"ds-timer\"><div class=\"ds-track\"><div class=\"ds-fill\"></div></div><span class=\"ds-secs\">20</span></div>",
+      "css": ".ds-timer { display: flex; align-items: center; gap: 16px; } .ds-track { position: relative; flex: 1; height: 12px; border-radius: 9999px; background: #eeede9; overflow: hidden; } .ds-fill { position: absolute; inset: 0 auto 0 0; width: 72%; border-radius: 9999px; background: #1b3139; transition: width 100ms linear; } .ds-secs { width: 80px; text-align: right; font: 500 48px/1 'DM Mono', monospace; font-variant-numeric: tabular-nums; color: #1b3139; }"
+    },
+    {
+      "name": "Surface List with Chip",
+      "kind": "card",
+      "refersTo": "surface",
+      "description": "Flat white surface with 1px oat rule, rows divided by rules; status chip.",
+      "html": "<div class=\"ds-surface\"><div class=\"ds-row\"><strong>Postgres &amp; Neon trivia</strong><span class=\"ds-meta\">2 players · Oct 27</span><span class=\"ds-chip\">Finished</span></div><div class=\"ds-row\"><strong>SQL basics</strong><span class=\"ds-meta\">8 players · Oct 26</span><span class=\"ds-chip ds-chip-live\">Live</span></div></div>",
+      "css": ".ds-surface { border: 1px solid #e2dfd8; border-radius: 16px; background: #fff; font-family: 'DM Sans', sans-serif; color: #1b3139; } .ds-row { display: flex; align-items: center; gap: 16px; padding: 20px; } .ds-row + .ds-row { border-top: 1px solid #e2dfd8; } .ds-row strong { flex: 1; font-weight: 600; } .ds-meta { font-size: 14px; color: #5a6f77; } .ds-chip { border-radius: 9999px; padding: 2px 10px; font: 600 12px/1.4 'DM Sans', sans-serif; background: #eeede9; color: #5a6f77; } .ds-chip-live { background: #fff0ed; color: #db2b12; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Stage and the Controller",
+    "overview": "PopQuiz is Databricks light, built for a room. The host screen is a stage read from the back row: one idea per screen, the question at display size, a full-width timer bar, and four answer tiles filling the lower half. The phone is a controller held in one hand: the four tiles become big tap targets and the whole screen floods green or lava with the verdict. Everything else (landing, dashboard, editor, reports, auth) is calm Oat paper with Navy ink and white surfaces, so the colour budget is spent where the game happens.\n\nThe ground is flat. 1px oat rules divide headers and lists, white surfaces sit on Oat, and one soft lift is the only shadow. Saturated colour lives in two places: Lava for the single action on a screen, and the answer quartet. The quartet always carries its shape, so colour is never the only signal. Motion has one grammar: things rise or grow into place from a state that is already visible, on one expo ease, and reduced motion turns it off.\n\nThe build rejects the purple-confetti game show and the SaaS card grid. Light theme only.",
+    "keyCharacteristics": [
+      "Oat ground, Navy ink, white surfaces, 1px oat rules.",
+      "Lava-600 is the one action colour; the answer quartet (Lava triangle, Blue diamond, Gold circle, Green square) is the one moment of full saturation.",
+      "DM Sans throughout, bold and tight (-0.03em) for headings; DM Mono only for PINs, timers and IDs.",
+      "Flat surfaces with a single soft lift, 14px tiles, 12-16px controls.",
+      "One motion grammar: rise, grow-up, pop, all on the expo-out ease."
+    ],
+    "rules": [
+      { "name": "The One Action Rule", "body": "A screen has one Lava-600 button. Secondary actions are quiet (white, oat rule), dark (Navy), or ghost.", "section": "colors" },
+      { "name": "The Quartet Travels Together Rule", "body": "Lava, Blue, Gold and Green-600 appear as a set, in that order, mapped to triangle, diamond, circle and square. Outside the game they appear only in the brand mark and in the shapes that carry them. A quartet colour never shows up without its shape.", "section": "colors" },
+      { "name": "The Reveal Drains Rule", "body": "After reveal, wrong answers fall back to Oat (oat-200 tiles, oat-300 bars) and only the correct answer keeps its colour.", "section": "colors" },
+      { "name": "The Mono Is For Codes Rule", "body": "DM Mono only sets PINs, the timer and IDs. Scores, ranks and counts are DM Sans with tabular figures.", "section": "typography" },
+      { "name": "The Tabular Figures Rule", "body": "Any number that changes live (score, timer, answered count, PIN) uses tabular-nums so it does not jitter.", "section": "typography" },
+      { "name": "The Balanced Heading Rule", "body": "h1 to h3 balance their wrap and track at -0.03em.", "section": "typography" },
+      { "name": "The One Lift Rule", "body": "There is one shadow. Cards and surfaces in the admin screens stay flat with a border; only tappable or stage objects lift.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep one Lava-600 primary per screen and drop everything else to quiet, dark or ghost.",
+      "Do pair every quartet colour with its shape, in the fixed order Lava triangle, Blue diamond, Gold circle, Green-600 square.",
+      "Do set Navy text on Gold and white text on Lava, Blue and Green-600.",
+      "Do use Lava-600, not Lava, for any text or small element that needs AA (4.9:1 under white).",
+      "Do use tabular figures for every live number, and DM Mono only for PINs, timers and IDs.",
+      "Do animate only with rise, grow-up or pop on the expo-out ease (cubic-bezier(0.16, 1, 0.3, 1)), from an already-visible state, and honour reduced motion."
+    ],
+    "donts": [
+      "Don't add a second shadow, or lift admin cards; they stay flat with a 1px oat rule.",
+      "Don't introduce a dark theme, gradients, or a purple game-show palette.",
+      "Don't set body-size white text on Lava (3.6:1); Lava carries large text only.",
+      "Don't use quartet colours for decoration outside the game, the brand mark, and data bars.",
+      "Don't pull in an icon library; add paths to the authored 24px, 1.75-stroke set."
+    ]
+  }
+}

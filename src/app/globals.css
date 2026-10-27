@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* PopQuiz design tokens. Databricks palette, light only: Oat ground, Navy ink, Lava as the one action
+   color, and an answer quartet that always travels with its shape. Contrast-checked pairs:
+   lava-600 + white 4.9:1 (small text), lava + white 3.6:1 (large text only), blue + white 5.1:1,
+   gold + navy 7.2:1, green-600 + white 4.6:1, navy-500 on oat 4.9:1. */
+@theme {
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, monospace;
+
+  --color-oat: #f9f7f4;
+  --color-oat-200: #eeede9;
+  --color-oat-300: #e2dfd8;
+  --color-navy: #1b3139;
+  --color-navy-700: #2f4a54;
+  --color-navy-500: #5a6f77;
+  --color-lava: #ff3621;
+  --color-lava-600: #db2b12;
+  --color-lava-50: #fff0ed;
+  --color-blue: #2272b4;
+  --color-gold: #ffab00;
+  --color-green: #00a972;
+  --color-green-600: #00875c;
+  --color-green-50: #e6f6f0;
+
+  --radius-tile: 14px;
+  --shadow-lift:
+    0 1px 2px rgb(27 49 57 / 0.06), 0 8px 24px -12px rgb(27 49 57 / 0.18);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: light;
+  background: var(--color-oat);
+  color: var(--color-navy);
+  accent-color: var(--color-lava-600);
+  caret-color: var(--color-lava-600);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-lava);
+  color: white;
+}
+
+/* In the base layer so utilities (focus-visible:outline-none on fields that show focus by border) win. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-lava-600);
+    outline-offset: 2px;
+  }
+}
+
+* {
+  scrollbar-color: var(--color-oat-300) transparent;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+}
+
+/* Numerals in scores, timers and PINs line up. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility btn {
+  @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold transition-[background-color,color,transform] duration-150 select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-lava-600 text-white hover:bg-[#c42510] disabled:bg-oat-300 disabled:text-navy-500 disabled:opacity-100;
+}
+@utility btn-dark {
+  @apply btn bg-navy text-white hover:bg-navy-700;
+}
+@utility btn-quiet {
+  @apply btn border border-oat-300 bg-white text-navy hover:bg-oat-200;
+}
+@utility btn-ghost {
+  @apply btn px-3 text-navy-500 hover:bg-oat-200 hover:text-navy;
+}
+@utility btn-lg {
+  @apply min-h-14 rounded-2xl px-6 text-lg;
+}
+
+@utility field-label {
+  @apply mb-1.5 block text-sm font-semibold text-navy;
+}
+@utility input {
+  @apply w-full rounded-xl border border-oat-300 bg-white px-3.5 py-2.5 text-navy transition-colors outline-none placeholder:text-navy-500 hover:border-navy-500/40 focus:border-lava-600 focus:ring-3 focus:ring-lava/15;
+}
+@utility surface {
+  @apply rounded-2xl border border-oat-300 bg-white;
+}
+@utility notice-error {
+  @apply rounded-xl bg-lava-50 px-3.5 py-2.5 text-sm text-lava-600;
+}
+
+/* Motion: one authored grammar. Things rise into place from already-visible states. */
+@keyframes rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0.001;
+  }
+}
+@keyframes grow-up {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+}
+.animate-rise {
+  animation: rise 0.5s var(--ease-out-expo) both;
+}
+.animate-grow-up {
+  transform-origin: bottom;
+  animation: grow-up 0.9s var(--ease-out-expo) both;
+}
+.animate-pop {
+  animation: pop 0.45s var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
