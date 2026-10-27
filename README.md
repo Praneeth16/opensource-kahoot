@@ -2,14 +2,16 @@
 
 An open-source live quiz game, like Kahoot, built on [Neon](https://neon.com). Hosts write a quiz and run it on a big screen. Players join from their phones with a game PIN and a nickname. They do not need an account.
 
+**Live demo:** https://opensource-kahoot.vercel.app
+
 It is inspired by the Supabase community's [kahoot-alternative](https://github.com/supabase-community/kahoot-alternative). This version uses Neon for everything on the backend.
 
-| Host screen | Player phone |
-| --- | --- |
+| Host screen                                                    | Player phone                                            |
+| -------------------------------------------------------------- | ------------------------------------------------------- |
 | ![Lobby with PIN and QR code](docs/screenshots/host-lobby.png) | ![Answer buttons](docs/screenshots/player-question.png) |
-| ![Question with timer](docs/screenshots/host-question.png) | ![Correct answer](docs/screenshots/player-correct.png) |
-| ![Reveal with answer counts](docs/screenshots/host-reveal.png) | |
-| ![Podium](docs/screenshots/host-podium.png) | |
+| ![Question with timer](docs/screenshots/host-question.png)     | ![Correct answer](docs/screenshots/player-correct.png)  |
+| ![Reveal with answer counts](docs/screenshots/host-reveal.png) |                                                         |
+| ![Podium](docs/screenshots/host-podium.png)                    |                                                         |
 
 ## Features
 
@@ -21,12 +23,12 @@ It is inspired by the Supabase community's [kahoot-alternative](https://github.c
 
 ## How it uses Neon
 
-| Neon service | What it does here |
-| --- | --- |
-| **Postgres** | Stores quizzes, games, players and answers. It is the only source of truth. Scores are computed inside the insert that records an answer. |
-| **Managed Better Auth** | Hosts sign up and sign in. Players do not use it. They get a random token in an httpOnly cookie, and the database keeps only its hash. |
-| **Realtime** | Every live screen is a live SQL query: game state, current question, players, answer counts, standings and the player's own answers. The server seals each query after it checks the host session or the player cookie. Writes return their transaction id, so the screen updates the moment the change lands. |
-| **Functions** | `functions/janitor.ts` runs every 15 minutes on a schedule trigger. It ends games that the host abandoned for 2 hours, and deletes lobbies that never started after a day. |
+| Neon service            | What it does here                                                                                                                                                                                                                                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Postgres**            | Stores quizzes, games, players and answers. It is the only source of truth. Scores are computed inside the insert that records an answer.                                                                                                                                                                      |
+| **Managed Better Auth** | Hosts sign up and sign in. Players do not use it. They get a random token in an httpOnly cookie, and the database keeps only its hash.                                                                                                                                                                         |
+| **Realtime**            | Every live screen is a live SQL query: game state, current question, players, answer counts, standings and the player's own answers. The server seals each query after it checks the host session or the player cookie. Writes return their transaction id, so the screen updates the moment the change lands. |
+| **Functions**           | `functions/janitor.ts` runs every 15 minutes on a schedule trigger. It ends games that the host abandoned for 2 hours, and deletes lobbies that never started after a day.                                                                                                                                     |
 
 The app itself is a Next.js 16 App Router project, hosted on Vercel. It uses Drizzle with `node-postgres`.
 

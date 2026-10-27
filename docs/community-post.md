@@ -1,6 +1,6 @@
 # Draft: Neon community post
 
-Post this yourself in the Neon Discord (#showcase) or on the Neon community forum. Replace `<demo-url>` with the Vercel URL first.
+Post this yourself in the Neon Discord (#showcase) or on the Neon community forum.
 
 ---
 
@@ -9,7 +9,7 @@ Post this yourself in the Neon Discord (#showcase) or on the Neon community foru
 Hi everyone. Our Kahoot license ran out, so we built our own live quiz game on Neon and made it open source.
 
 - Repo: https://github.com/Praneeth16/opensource-kahoot
-- Live demo: <demo-url>
+- Live demo: https://opensource-kahoot.vercel.app
 
 **How it works.** A host signs in, writes a quiz and starts a game. Players join from their phones with a 6-digit PIN and a nickname. They don't need an account. The game runs through a lobby, timed questions, a reveal with answer counts, a leaderboard and a podium. Afterwards there is a report with a CSV download.
 

@@ -8,7 +8,10 @@ export default defineConfig({
     realtime: {
       // Browser origins allowed to open the Realtime WebSocket. Add each deployed origin, then run
       // `neon deploy`. A missing origin doesn't error: live screens just stay connecting.
-      allowedOrigins: ["http://localhost:3000"],
+      allowedOrigins: [
+        "http://localhost:3000",
+        "https://opensource-kahoot.vercel.app",
+      ],
     },
   },
   functions: {
