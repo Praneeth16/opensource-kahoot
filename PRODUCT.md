@@ -37,7 +37,8 @@ A Neon reference app: Postgres is the only source of truth, live screens are Neo
 ## Brand Commitments
 
 - Name: PopQuiz (working name).
-- Binding from the user: light theme only; Databricks color scheme and font (DM Sans and DM Mono; Lava #FF3621, Navy #1B3139, Oat #F9F7F4 and #EEEDE9, white surfaces); bloat-free and simple.
+- Binding from the user: light theme only; Databricks fonts (DM Sans and DM Mono); bloat-free and simple. Palette: "Warm muted", chosen by the user on 2026-10-28 to replace the brighter Databricks colors: parchment ground #F4EEE4, surface #FBF8F2, warm charcoal ink #2E2A27, terracotta #B8482E as the action color, answer quartet terracotta / dusty teal #2F6B78 / ochre #D69A2D / olive #5E7334.
+- Every screen is supported: phones (portrait and landscape), tablets, laptops, desktops, and projectors or TVs up to 4K, where the host stage fits one screen without scrolling.
 - Voice: playful but professional. Game moments (countdown, reveal, podium) can celebrate; everything else is plain and clear.
 - Answer options always carry a shape (triangle, diamond, circle, square) as well as a color.
 

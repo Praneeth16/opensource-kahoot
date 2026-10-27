@@ -13,6 +13,7 @@ import {
 } from "@/app/actions/game";
 import {
   AnswerTile,
+  ordinal,
   rank,
   splitQuestion,
   TimerBar,
@@ -29,7 +30,7 @@ import type {
 } from "@/lib/live";
 import type { WriteResult } from "@/lib/result";
 import { Icon } from "@/ui/icons";
-import { ANSWER_STYLES, Shape, Wordmark } from "@/ui/shapes";
+import { Wordmark } from "@/ui/shapes";
 
 const SYNC_TIMEOUT_MS = 10_000;
 
@@ -104,6 +105,14 @@ export function HostGame({
     );
   }
 
+  // Answers per choice of the current question (kicked players are already left out of the tally).
+  const counts = new Map(
+    question
+      ? tally
+          .filter((t) => t.question_id === question.id)
+          .map((t) => [t.choice_id, t.n] as const)
+      : [],
+  );
   const answered = question
     ? tally
         .filter((t) => t.question_id === question.id)
@@ -142,19 +151,21 @@ export function HostGame({
     run(() => nextQuestion(gameId, userId, game.question_index));
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="flex items-center justify-between gap-4 border-b border-oat-300 bg-white px-6 py-3">
+    // A stage: on screens at least 1024×600 it fills exactly one viewport; shorter or narrower ones scroll. The host page
+    // scales the root font with the viewport, so every rem below grows from 1280×720 to 4K.
+    <div className="flex min-h-dvh flex-col stage:h-dvh stage:overflow-hidden">
+      <header className="flex shrink-0 items-center justify-between gap-4 border-b border-rule bg-surface px-6 py-3">
         <div className="flex min-w-0 items-center gap-4">
           <Link aria-label="Back to dashboard" href="/dashboard">
             <Wordmark />
           </Link>
-          <span className="hidden truncate text-navy-500 sm:inline">
+          <span className="hidden truncate text-ink-muted sm:inline">
             {game.quiz_title}
           </span>
         </div>
         <div className="flex items-center gap-2">
           {game.phase !== "lobby" && game.phase !== "ended" && (
-            <span className="tabular mr-2 font-mono text-sm text-navy-500">
+            <span className="tabular mr-2 font-mono text-sm text-ink-muted">
               PIN {game.pin}
             </span>
           )}
@@ -194,12 +205,12 @@ export function HostGame({
       )}
 
       {(game.phase === "question" || game.phase === "reveal") && question && (
-        <main className="flex flex-1 flex-col gap-6 px-6 py-6 lg:px-10">
-          <div className="flex items-center justify-between gap-4 text-navy-500">
+        <main className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-6 py-5 lg:px-10">
+          <div className="flex shrink-0 items-center justify-between gap-4 text-ink-muted">
             <span className="font-semibold">
               Question {game.question_index + 1} of {game.question_count}
               {question.points === "double" && (
-                <span className="ml-3 rounded-full bg-gold px-2.5 py-0.5 text-sm text-navy">
+                <span className="ml-3 rounded-full bg-q-ochre px-2.5 py-0.5 text-sm text-ink">
                   Double points
                 </span>
               )}
@@ -216,48 +227,48 @@ export function HostGame({
               totalMs={question.time_limit_s * 1000}
             />
           ) : (
-            <div className="h-12" />
+            <div className="h-[2.25rem] shrink-0" />
           )}
 
-          <div className="flex flex-1 flex-col items-center justify-center gap-6">
-            <h1 className="max-w-5xl text-center text-4xl leading-tight font-bold lg:text-6xl">
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+            <h1
+              className={`max-w-[60rem] text-center leading-[1.12] font-bold ${question.body.length > 140 ? "text-[clamp(1.375rem,min(4.2vh,4.6vw)+0.5rem,2.75rem)]" : "text-[clamp(1.5rem,min(6vh,6.5vw)+0.5rem,3.75rem)]"}`}
+            >
               {question.body}
             </h1>
             {question.image_url && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 alt=""
-                className="max-h-[32vh] rounded-[var(--radius-tile)] object-contain"
+                className="min-h-[min(12rem,22vh)] max-w-full flex-1 rounded-[var(--radius-tile)] object-contain"
                 src={question.image_url}
               />
             )}
-            {game.phase === "reveal" && (
-              <Distribution
-                choices={question.choices}
-                questionId={question.id}
-                tally={tally}
-              />
-            )}
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            {question.choices.map((choice) => (
-              <AnswerTile
-                choice={choice}
-                key={choice.id}
-                size="lg"
-                state={
-                  game.phase === "reveal"
-                    ? choice.is_correct
-                      ? "correct"
-                      : "wrong"
-                    : "idle"
-                }
-              />
-            ))}
+          <div className="grid shrink-0 gap-3 sm:grid-cols-2">
+            {question.choices.map((choice) => {
+              const revealed = game.phase === "reveal";
+              const n = counts.get(choice.id) ?? 0;
+              return (
+                <AnswerTile
+                  choice={choice}
+                  count={revealed ? n : undefined}
+                  key={choice.id}
+                  share={answered ? n / answered : 0}
+                  state={
+                    revealed
+                      ? choice.is_correct
+                        ? "correct"
+                        : "wrong"
+                      : "idle"
+                  }
+                />
+              );
+            })}
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex shrink-0 justify-end">
             {game.phase === "question" ? (
               <button
                 className="btn-quiet"
@@ -290,8 +301,10 @@ export function HostGame({
       )}
 
       {game.phase === "leaderboard" && (
-        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-8 px-6 py-10">
-          <h1 className="text-center text-5xl font-bold">Leaderboard</h1>
+        <main className="mx-auto flex min-h-0 w-full max-w-[48rem] flex-1 flex-col justify-center gap-[clamp(1rem,3vh,2rem)] px-6 py-6">
+          <h1 className="text-center text-[clamp(2rem,6vh,3rem)] font-bold">
+            Leaderboard
+          </h1>
           <Standings rows={standings} top={5} />
           <div className="flex justify-center">
             <button
@@ -333,13 +346,13 @@ function Lobby({
   onKick: (id: string) => void;
 }) {
   return (
-    <main className="grid flex-1 gap-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
-      <section className="flex flex-col justify-center gap-8 px-6 py-10 lg:px-14">
+    <main className="grid min-h-0 flex-1 gap-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
+      <section className="flex flex-col justify-center gap-[clamp(1.25rem,4vh,2.5rem)] px-6 py-8 lg:px-14">
         <div>
-          <p className="text-xl text-navy-500">
-            Join at <strong className="text-navy">{host}</strong> with PIN
+          <p className="text-xl text-ink-muted">
+            Join at <strong className="text-ink">{host}</strong> with PIN
           </p>
-          <p className="tabular mt-2 font-mono text-[clamp(4.5rem,12vw,9rem)] leading-none font-medium tracking-[0.04em]">
+          <p className="tabular mt-2 font-mono text-[min(9rem,13vw,22vh)] leading-none font-medium tracking-[0.04em]">
             {game.pin.slice(0, 3)}
             <span className="inline-block w-[0.3em]" />
             {game.pin.slice(3)}
@@ -348,17 +361,17 @@ function Lobby({
         <div className="flex items-end gap-6">
           <div
             aria-label="QR code to join this game"
-            className="size-40 shrink-0 rounded-xl bg-white p-3 shadow-lift [&_svg]:size-full"
+            className="size-[min(10rem,24vh)] shrink-0 rounded-xl bg-surface p-[0.6rem] shadow-lift [&_svg]:size-full"
             dangerouslySetInnerHTML={{ __html: qrSvg }}
             role="img"
           />
-          <p className="max-w-56 pb-2 text-navy-500">
+          <p className="max-w-56 pb-2 text-ink-muted">
             Or scan with a phone camera to jump straight in.
           </p>
         </div>
       </section>
 
-      <section className="flex flex-col border-t border-oat-300 bg-white px-6 py-8 lg:border-t-0 lg:border-l lg:px-10">
+      <section className="flex min-h-0 flex-col border-t border-rule bg-surface px-6 py-6 lg:border-t-0 lg:border-l lg:px-10">
         <div className="mb-5 flex items-center justify-between gap-3">
           <h2 className="flex items-center gap-2 text-2xl font-bold">
             <Icon className="size-6" name="users" />
@@ -377,23 +390,23 @@ function Lobby({
         </div>
 
         {players.length === 0 ? (
-          <p className="flex flex-1 items-center justify-center py-12 text-center text-navy-500">
+          <p className="flex flex-1 items-center justify-center py-12 text-center text-ink-muted">
             Waiting for players to join…
           </p>
         ) : (
           <ul
-            className="flex flex-1 flex-wrap content-start gap-2"
+            className="-mx-1 flex min-h-0 flex-1 flex-wrap content-start gap-2 overflow-y-auto px-1 py-1"
             aria-live="polite"
           >
             {players.map((p) => (
               <li
-                className="animate-rise group flex items-center gap-1 rounded-full bg-oat-200 py-1.5 pr-1.5 pl-4 text-lg font-semibold"
+                className="animate-rise group flex items-center gap-1 rounded-full bg-sunken py-1.5 pr-1.5 pl-4 text-lg font-semibold"
                 key={p.id}
               >
                 {p.nickname}
                 <button
                   aria-label={`Remove ${p.nickname}`}
-                  className="grid size-7 cursor-pointer place-items-center rounded-full text-navy-500 opacity-60 hover:bg-white hover:text-lava-600 hover:opacity-100 focus-visible:opacity-100"
+                  className="grid size-7 cursor-pointer place-items-center rounded-full pointer-coarse:-my-1.5 pointer-coarse:size-10 text-ink-muted opacity-60 hover:bg-surface hover:text-action hover:opacity-100 focus-visible:opacity-100"
                   onClick={() => onKick(p.id)}
                   type="button"
                 >
@@ -405,7 +418,7 @@ function Lobby({
         )}
 
         <button
-          className="btn-primary btn-lg mt-8 w-full"
+          className="btn-primary btn-lg mt-6 w-full shrink-0"
           disabled={pending || players.length === 0}
           onClick={onStart}
           type="button"
@@ -414,50 +427,6 @@ function Lobby({
         </button>
       </section>
     </main>
-  );
-}
-
-function Distribution({
-  choices,
-  tally,
-  questionId,
-}: {
-  choices: { id: string; position: number; is_correct: boolean | null }[];
-  tally: readonly TallyRow[];
-  questionId: string;
-}) {
-  const counts = choices.map(
-    (c) =>
-      tally.find((t) => t.question_id === questionId && t.choice_id === c.id)
-        ?.n ?? 0,
-  );
-  const max = Math.max(1, ...counts);
-  return (
-    <div
-      aria-label="How players answered"
-      className="flex h-40 items-end gap-4"
-      role="img"
-    >
-      {choices.map((c, i) => {
-        const style = ANSWER_STYLES[c.position % 4]!;
-        return (
-          <div
-            className="flex w-16 flex-col items-center gap-2 lg:w-24"
-            key={c.id}
-          >
-            <span className="tabular text-2xl font-medium">{counts[i]}</span>
-            <div
-              className={`animate-grow-up w-full rounded-t-lg ${c.is_correct ? style.bar : "bg-oat-300"}`}
-              style={{
-                height: `${Math.max(4, (counts[i]! / max) * 100)}px`,
-                animationDelay: `${i * 60}ms`,
-              }}
-            />
-            <Shape className="size-5" index={c.position} />
-          </div>
-        );
-      })}
-    </div>
   );
 }
 
@@ -470,16 +439,16 @@ function Standings({
 }) {
   const ranked = useMemo(() => rank(rows).slice(0, top), [rows, top]);
   if (!ranked.length)
-    return <p className="text-center text-navy-500">No players.</p>;
+    return <p className="text-center text-ink-muted">No players.</p>;
   return (
     <ol className="flex flex-col gap-2">
       {ranked.map((r, i) => (
         <li
-          className="animate-rise flex items-center gap-5 rounded-[var(--radius-tile)] bg-white px-6 py-4 text-2xl shadow-lift"
+          className="animate-rise flex items-center gap-5 rounded-[var(--radius-tile)] bg-surface px-6 py-[clamp(0.5rem,1.6vh,1rem)] text-[clamp(1.25rem,3.6vh,1.75rem)] shadow-lift"
           key={r.id}
           style={{ animationDelay: `${i * 70}ms` }}
         >
-          <span className="tabular w-10 text-navy-500">{r.rank}</span>
+          <span className="tabular w-10 text-ink-muted">{r.rank}</span>
           <span className="min-w-0 flex-1 truncate font-semibold">
             {r.nickname}
           </span>
@@ -498,15 +467,21 @@ function Podium({
   standings: readonly StandingRow[];
 }) {
   const ranked = useMemo(() => rank(standings), [standings]);
-  // Visual order 2nd, 1st, 3rd; heights by place.
+  // Visual order 2nd, 1st, 3rd. Height follows the shared rank, so tied players stand level.
+  const HEIGHT: Record<number, string> = {
+    1: "h-[min(14rem,30vh)]",
+    2: "h-[min(10rem,22vh)]",
+  };
+  const height = (r?: { rank: number }) =>
+    HEIGHT[r?.rank ?? 3] ?? "h-[min(7rem,15vh)]";
   const places = [
-    { r: ranked[1], h: "h-40", label: "2nd", delay: "300ms" },
-    { r: ranked[0], h: "h-56", label: "1st", delay: "700ms" },
-    { r: ranked[2], h: "h-28", label: "3rd", delay: "0ms" },
+    { r: ranked[1], h: height(ranked[1]), label: "2nd", delay: "300ms" },
+    { r: ranked[0], h: height(ranked[0]), label: "1st", delay: "700ms" },
+    { r: ranked[2], h: height(ranked[2]), label: "3rd", delay: "0ms" },
   ];
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-10 px-6 py-10">
-      <h1 className="text-5xl font-bold">Podium</h1>
+    <main className="mx-auto flex min-h-0 w-full max-w-[56rem] flex-1 flex-col items-center justify-center gap-[clamp(1rem,4vh,2.5rem)] px-6 py-6">
+      <h1 className="text-[clamp(2rem,6vh,3rem)] font-bold">Podium</h1>
       <div className="flex w-full items-end justify-center gap-4">
         {places
           .filter(({ r }) => r)
@@ -521,14 +496,14 @@ function Podium({
                   style={{ animationDelay: delay }}
                 >
                   <p className="truncate text-2xl font-bold">{r.nickname}</p>
-                  <p className="tabular text-navy-500">{r.score}</p>
+                  <p className="tabular text-ink-muted">{r.score}</p>
                 </div>
               )}
               <div
-                className={`animate-grow-up flex w-full items-start justify-center rounded-t-[var(--radius-tile)] pt-4 text-3xl font-bold ${h} ${label === "1st" ? "bg-lava text-white" : "bg-navy text-white"}`}
+                className={`animate-grow-up flex w-full items-start justify-center rounded-t-[var(--radius-tile)] pt-4 text-3xl font-bold ${h} ${r?.rank === 1 ? "bg-action text-white" : "bg-ink text-white"}`}
                 style={{ animationDelay: delay }}
               >
-                {label}
+                {r ? ordinal(r.rank) : label}
               </div>
             </div>
           ))}

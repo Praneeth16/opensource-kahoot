@@ -20,7 +20,7 @@ export function ConfirmButton({
     >
       <button
         aria-label={label}
-        className="btn-ghost hover:text-lava-600"
+        className="btn-ghost hover:text-action"
         type="submit"
       >
         <Icon name="trash" />

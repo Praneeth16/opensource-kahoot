@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { getUser } from "@/auth/server";
-import { getReport } from "@/lib/reports";
+import { getReport, sharedRanks } from "@/lib/reports";
 import { AppHeader } from "@/ui/app-header";
 import { Icon } from "@/ui/icons";
 
@@ -19,6 +19,7 @@ export default async function ReportPage({
   const report = await getReport(gameId, user.id);
   if (!report) notFound();
   const { game, players, questions } = report;
+  const rankOf = sharedRanks(players);
 
   return (
     <>
@@ -30,7 +31,7 @@ export default async function ReportPage({
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-4xl font-bold">{game.title}</h1>
-            <p className="tabular mt-1 text-navy-500">
+            <p className="tabular mt-1 text-ink-muted">
               {game.created_at.toLocaleString("en", {
                 dateStyle: "medium",
                 timeStyle: "short",
@@ -44,12 +45,12 @@ export default async function ReportPage({
           </a>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[3fr_2fr]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[3fr_2fr]">
           <section>
             <h2 className="mb-3 text-xl font-bold">Standings</h2>
             <div className="surface overflow-x-auto">
               <table className="tabular w-full text-left">
-                <thead className="border-b border-oat-300 text-sm text-navy-500">
+                <thead className="border-b border-rule text-sm text-ink-muted">
                   <tr>
                     <th className="px-5 py-3 font-semibold">#</th>
                     <th className="px-2 py-3 font-semibold">Player</th>
@@ -64,22 +65,20 @@ export default async function ReportPage({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-oat-300">
+                <tbody className="divide-y divide-rule">
                   {players.map((p, i) => (
                     <tr key={p.id}>
-                      <td className="px-5 py-3 font-mono text-navy-500">
-                        {i + 1}
-                      </td>
+                      <td className="px-5 py-3 text-ink-muted">{rankOf[i]}</td>
                       <td className="px-2 py-3 font-semibold">{p.nickname}</td>
-                      <td className="px-2 py-3 text-right font-mono">
+                      <td className="px-2 py-3 text-right">
                         {p.correct}/{questions.length}
                       </td>
-                      <td className="px-2 py-3 text-right font-mono">
+                      <td className="px-2 py-3 text-right">
                         {p.avg_ms == null
                           ? "–"
                           : `${(p.avg_ms / 1000).toFixed(1)}s`}
                       </td>
-                      <td className="px-5 py-3 text-right font-mono font-medium">
+                      <td className="px-5 py-3 text-right font-semibold">
                         {p.score}
                       </td>
                     </tr>
@@ -87,7 +86,7 @@ export default async function ReportPage({
                   {players.length === 0 && (
                     <tr>
                       <td
-                        className="px-5 py-8 text-center text-navy-500"
+                        className="px-5 py-8 text-center text-ink-muted"
                         colSpan={5}
                       >
                         Nobody played this game.
@@ -101,7 +100,7 @@ export default async function ReportPage({
 
           <section>
             <h2 className="mb-3 text-xl font-bold">Questions</h2>
-            <ol className="surface divide-y divide-oat-300">
+            <ol className="surface divide-y divide-rule">
               {questions.map((q) => {
                 const pct = q.answered
                   ? Math.round((q.correct / q.answered) * 100)
@@ -110,34 +109,34 @@ export default async function ReportPage({
                   <li className="px-5 py-4" key={q.position}>
                     <div className="flex items-baseline justify-between gap-4">
                       <p className="min-w-0 font-medium">
-                        <span className="tabular mr-2 font-mono text-sm text-navy-500">
+                        <span className="tabular mr-2 text-sm text-ink-muted">
                           {q.position + 1}
                         </span>
                         {q.body}
                       </p>
                       <span
-                        className={`tabular shrink-0 font-mono font-medium ${pct < 50 ? "text-lava-600" : "text-green-600"}`}
+                        className={`tabular shrink-0 font-semibold ${pct < 50 ? "text-action" : "text-q-olive"}`}
                       >
                         {pct}%
                       </span>
                     </div>
                     <div
                       aria-hidden="true"
-                      className="mt-2 h-1.5 overflow-hidden rounded-full bg-oat-200"
+                      className="mt-2 h-1.5 overflow-hidden rounded-full bg-sunken"
                     >
                       <div
-                        className={`h-full rounded-full ${pct < 50 ? "bg-lava" : "bg-green-600"}`}
+                        className={`h-full rounded-full ${pct < 50 ? "bg-action" : "bg-q-olive"}`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <p className="tabular mt-1.5 text-xs text-navy-500">
+                    <p className="tabular mt-1.5 text-xs text-ink-muted">
                       {q.correct} of {q.answered} answered correctly
                     </p>
                   </li>
                 );
               })}
               {questions.length === 0 && (
-                <li className="px-5 py-8 text-center text-navy-500">
+                <li className="px-5 py-8 text-center text-ink-muted">
                   The game ended before the first question.
                 </li>
               )}

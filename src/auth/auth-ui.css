@@ -5,24 +5,24 @@
 
 /* Managed Better Auth UI in the PopQuiz palette. */
 :root {
-  --background: #f9f7f4;
-  --foreground: #1b3139;
-  --card: #ffffff;
-  --card-foreground: #1b3139;
-  --popover: #ffffff;
-  --popover-foreground: #1b3139;
-  --primary: #db2b12;
+  --background: #f4eee4;
+  --foreground: #2e2a27;
+  --card: #fbf8f2;
+  --card-foreground: #2e2a27;
+  --popover: #fbf8f2;
+  --popover-foreground: #2e2a27;
+  --primary: #b8482e;
   --primary-foreground: #ffffff;
-  --secondary: #eeede9;
-  --secondary-foreground: #1b3139;
-  --muted: #eeede9;
-  --muted-foreground: #5a6f77;
-  --accent: #eeede9;
-  --accent-foreground: #1b3139;
-  --destructive: #db2b12;
-  --border: #e2dfd8;
-  --input: #e2dfd8;
-  --ring: #db2b12;
+  --secondary: #ede5d8;
+  --secondary-foreground: #2e2a27;
+  --muted: #ede5d8;
+  --muted-foreground: #6e655c;
+  --accent: #ede5d8;
+  --accent-foreground: #2e2a27;
+  --destructive: #b8482e;
+  --border: #e3dacb;
+  --input: #e3dacb;
+  --ring: #b8482e;
   --neon-radius: 0.75rem;
 }
 
@@ -32,4 +32,15 @@
 }
 body {
   font-family: var(--font-sans);
+}
+
+/* Touch screens: the auth UI's 36px fields and buttons grow to 44px targets. */
+@media (pointer: coarse) {
+  .auth-touch :is(input, button) {
+    min-height: 44px;
+  }
+  .auth-touch a {
+    display: inline-block;
+    padding-block: 0.7rem;
+  }
 }

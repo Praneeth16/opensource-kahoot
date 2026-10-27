@@ -31,7 +31,7 @@ export function PinForm() {
         aria-invalid={error ? true : undefined}
         autoComplete="off"
         autoFocus
-        className="tabular h-20 w-full rounded-2xl border-2 border-oat-300 bg-white text-center font-mono text-5xl tracking-[0.2em] text-navy shadow-lift outline-none focus:border-navy focus-visible:outline-none placeholder:font-sans placeholder:text-2xl placeholder:tracking-normal placeholder:text-navy-500"
+        className="tabular h-20 w-full rounded-2xl border-2 border-rule bg-surface text-center font-mono text-5xl tracking-[0.2em] text-ink shadow-lift outline-none focus:border-ink focus-visible:outline-none placeholder:font-sans placeholder:text-2xl placeholder:tracking-normal placeholder:text-ink-muted"
         id="pin"
         inputMode="numeric"
         maxLength={6}
@@ -51,7 +51,7 @@ export function PinForm() {
       </button>
       <p
         aria-live="polite"
-        className="min-h-5 text-center text-sm text-lava-600"
+        className="min-h-5 text-center text-sm text-action"
         id="pin-error"
       >
         {error}

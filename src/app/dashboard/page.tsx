@@ -51,7 +51,7 @@ export default async function Dashboard() {
           <section className="surface flex flex-col items-center px-6 py-16 text-center">
             <Mark className="size-12" />
             <h2 className="mt-5 text-2xl font-bold">Write your first quiz</h2>
-            <p className="mt-2 max-w-md text-navy-500">
+            <p className="mt-2 max-w-md text-ink-muted">
               Start from scratch, or load a six-question sample and run a game
               in under a minute.
             </p>
@@ -67,7 +67,7 @@ export default async function Dashboard() {
             </div>
           </section>
         ) : (
-          <ul className="surface divide-y divide-oat-300">
+          <ul className="surface divide-y divide-rule">
             {quizzes.map((q) => (
               <li
                 className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4"
@@ -75,12 +75,12 @@ export default async function Dashboard() {
               >
                 <div className="min-w-0 flex-1 basis-64">
                   <Link
-                    className="text-lg font-semibold hover:underline hover:underline-offset-4"
+                    className="inline-block py-1 text-lg font-semibold hover:underline hover:underline-offset-4 pointer-coarse:py-2.5"
                     href={`/quizzes/${q.id}/edit`}
                   >
                     {q.title}
                   </Link>
-                  <p className="tabular mt-0.5 truncate text-sm text-navy-500">
+                  <p className="tabular mt-0.5 truncate text-sm text-ink-muted">
                     {q.question_count}{" "}
                     {q.question_count === 1 ? "question" : "questions"} · played{" "}
                     {q.play_count} {q.play_count === 1 ? "time" : "times"}
@@ -129,7 +129,7 @@ export default async function Dashboard() {
         {recent.length > 0 && (
           <section className="mt-14">
             <h2 className="mb-4 text-xl font-bold">Recent games</h2>
-            <ul className="surface divide-y divide-oat-300">
+            <ul className="surface divide-y divide-rule">
               {recent.map((g) => (
                 <li
                   className="flex flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3"
@@ -138,7 +138,7 @@ export default async function Dashboard() {
                   <span className="min-w-0 flex-1 basis-48 truncate font-semibold">
                     {g.title}
                   </span>
-                  <span className="tabular text-sm text-navy-500">
+                  <span className="tabular text-sm text-ink-muted">
                     {g.player_count}{" "}
                     {g.player_count === 1 ? "player" : "players"} ·{" "}
                     {g.created_at.toLocaleDateString("en", {
@@ -147,7 +147,7 @@ export default async function Dashboard() {
                     })}
                   </span>
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${g.phase === "ended" ? "bg-oat-200 text-navy-500" : "bg-lava-50 text-lava-600"}`}
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${g.phase === "ended" ? "bg-sunken text-ink-muted" : "bg-action-soft text-action-strong"}`}
                   >
                     {PHASE_LABEL[g.phase]}
                   </span>

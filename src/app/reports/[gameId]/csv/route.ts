@@ -1,5 +1,5 @@
 import { getUser } from "@/auth/server";
-import { getReport } from "@/lib/reports";
+import { getReport, sharedRanks } from "@/lib/reports";
 
 // Quote every field, double inner quotes, and defuse spreadsheet formulas in player-chosen nicknames.
 const cell = (value: string | number) => {
@@ -16,13 +16,14 @@ export async function GET(
   if (!user) return new Response("Unauthorized", { status: 401 });
   const report = await getReport(gameId, user.id);
   if (!report) return new Response("Not found", { status: 404 });
+  const ranks = sharedRanks(report.players);
   const lines = [
     ["rank", "nickname", "score", "correct", "answered", "avg_seconds"]
       .map(cell)
       .join(","),
     ...report.players.map((p, i) =>
       [
-        i + 1,
+        ranks[i]!,
         p.nickname,
         p.score,
         p.correct,

@@ -23,7 +23,7 @@ export default async function Home({
         <h1 className="mb-2 text-center text-4xl font-bold sm:text-5xl">
           Join a game
         </h1>
-        <p className="mb-8 text-center text-navy-500">
+        <p className="mb-8 text-center text-ink-muted">
           Enter the PIN on the host&apos;s screen.
         </p>
         {notice === "removed" && (
@@ -33,7 +33,7 @@ export default async function Home({
         )}
         {notice === "ended" && (
           <p
-            className="mb-4 rounded-xl bg-oat-200 px-3.5 py-2.5 text-sm"
+            className="mb-4 rounded-xl bg-sunken px-3.5 py-2.5 text-sm"
             role="status"
           >
             That game has ended. Thanks for playing.
@@ -42,10 +42,10 @@ export default async function Home({
         <PinForm />
       </main>
 
-      <footer className="mx-auto w-full max-w-6xl px-5 py-6 text-sm text-navy-500">
+      <footer className="mx-auto w-full max-w-6xl px-5 py-6 text-sm text-ink-muted">
         Open source. Runs on{" "}
         <a
-          className="underline decoration-oat-300 underline-offset-4 hover:text-navy"
+          className="underline decoration-rule underline-offset-4 hover:text-ink"
           href="https://neon.com"
         >
           Neon

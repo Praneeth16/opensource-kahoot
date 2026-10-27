@@ -253,7 +253,7 @@ test(`load: ${PLAYERS} players play a full game to the leaderboard`, async ({
     await Promise.all(
       players.map(async (p, i) => {
         const me = ranked.find((r) => r.nickname === names[i])!;
-        await expect(p.getByText("Final standing")).toBeVisible({
+        await expect(p.getByText("points ·")).toBeVisible({
           timeout: 30_000,
         });
         const main = p.locator("main");

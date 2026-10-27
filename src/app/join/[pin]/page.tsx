@@ -20,7 +20,7 @@ export default async function JoinPage({
         </Link>
       </header>
       <main className="flex flex-1 flex-col items-center justify-center px-5 pb-16">
-        <p className="tabular mb-3 rounded-full bg-oat-200 px-3 py-1 font-mono text-sm">
+        <p className="tabular mb-3 rounded-full bg-sunken px-3 py-1 font-mono text-sm">
           Game {pin}
         </p>
         <h1 className="mb-8 text-center text-4xl font-bold">Pick a nickname</h1>

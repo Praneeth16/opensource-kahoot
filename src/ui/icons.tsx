@@ -60,7 +60,7 @@ export type IconName = keyof typeof ICONS;
 
 export function Icon({
   name,
-  className = "size-[18px]",
+  className = "size-[1.125rem]",
 }: {
   name: IconName;
   className?: string;

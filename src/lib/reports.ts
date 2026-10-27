@@ -53,3 +53,7 @@ export async function getReport(gameId: string, hostId: string) {
   ]);
   return { game: games[0], players, questions };
 }
+
+/** Equal scores share a rank (1, 1, 3), as on the host leaderboard and podium. Rows are sorted by score. */
+export const sharedRanks = (rows: { score: number }[]) =>
+  rows.map((r) => rows.findIndex((q) => q.score === r.score) + 1);

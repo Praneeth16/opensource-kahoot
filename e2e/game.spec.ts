@@ -170,10 +170,12 @@ test("scratch quiz: build, host, play, score, report, edit, re-host", async ({
     );
     expect(rows).toHaveLength(9);
     for (const a of rows)
+      // answered_ms is the server's elapsed time rounded to the millisecond, so a recomputed score can
+      // land one point either side of the server's (two on double points).
       expect(
         Math.abs(a.points - expectedPoints(a)),
         JSON.stringify(a),
-      ).toBeLessThanOrEqual(1);
+      ).toBeLessThanOrEqual(a.points_kind === "double" ? 2 : 1);
     expect(
       rows
         .map((a) => `${a.position}${a.nickname[0]}${a.is_correct ? "+" : "-"}`)

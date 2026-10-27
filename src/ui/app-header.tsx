@@ -6,7 +6,7 @@ import { Wordmark } from "./shapes";
 
 export function AppHeader({ email }: { email: string }) {
   return (
-    <header className="border-b border-oat-300 bg-white">
+    <header className="border-b border-rule bg-surface">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
         <Link aria-label="Dashboard" href="/dashboard">
           <Wordmark />

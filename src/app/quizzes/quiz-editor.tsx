@@ -117,7 +117,7 @@ export function QuizEditor({
           <Icon name="back" /> Quizzes
         </Link>
         <div className="flex items-center gap-2">
-          <span aria-live="polite" className="mr-2 text-sm text-navy-500">
+          <span aria-live="polite" className="mr-2 text-sm text-ink-muted">
             {pending
               ? "Saving…"
               : dirty
@@ -153,7 +153,7 @@ export function QuizEditor({
 
       {/* Locked while saving: an edit made mid-save would otherwise be marked saved and lost. */}
       <fieldset className="m-0 min-w-0 border-0 p-0" disabled={pending}>
-        <section className="mb-6 grid gap-4 md:grid-cols-[2fr_3fr]">
+        <section className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-[2fr_3fr]">
           <div>
             <label className="field-label" htmlFor="title">
               Title
@@ -170,7 +170,7 @@ export function QuizEditor({
           <div>
             <label className="field-label" htmlFor="description">
               Description{" "}
-              <span className="font-normal text-navy-500">(optional)</span>
+              <span className="font-normal text-ink-muted">(optional)</span>
             </label>
             <input
               className="input"
@@ -183,7 +183,7 @@ export function QuizEditor({
           </div>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
           <nav aria-label="Questions" className="flex flex-col gap-2">
             <ol className="flex flex-col gap-1.5">
               {quiz.questions.map((q, i) => {
@@ -194,24 +194,24 @@ export function QuizEditor({
                   <li key={q.id}>
                     <button
                       aria-current={i === selected ? "true" : undefined}
-                      className={`flex w-full cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${i === selected ? "border-navy bg-white" : "border-transparent hover:bg-oat-200"}`}
+                      className={`flex w-full cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${i === selected ? "border-ink bg-surface" : "border-transparent hover:bg-sunken"}`}
                       onClick={() => setSelected(i)}
                       type="button"
                     >
-                      <span className="tabular mt-0.5 w-5 shrink-0 font-mono text-sm text-navy-500">
+                      <span className="tabular mt-0.5 w-5 shrink-0 font-mono text-sm text-ink-muted">
                         {i + 1}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span
-                          className={`line-clamp-2 text-sm ${q.body ? "font-medium" : "text-navy-500 italic"}`}
+                          className={`line-clamp-2 text-sm ${q.body ? "font-medium" : "text-ink-muted italic"}`}
                         >
                           {q.body || "Untitled question"}
                         </span>
-                        <span className="mt-0.5 block text-xs text-navy-500">
+                        <span className="mt-0.5 block text-xs text-ink-muted">
                           {q.kind === "truefalse" ? "True or false" : "Quiz"} ·{" "}
                           {q.time_limit_s}s
                           {bad && (
-                            <span className="ml-1.5 font-semibold text-lava-600">
+                            <span className="ml-1.5 font-semibold text-action">
                               · needs work
                             </span>
                           )}
@@ -266,7 +266,7 @@ export function QuizEditor({
                   <Icon name="down" />
                 </button>
                 <button
-                  className="btn-ghost hover:text-lava-600"
+                  className="btn-ghost hover:text-action"
                   disabled={quiz.questions.length === 1}
                   onClick={() => remove(selected)}
                   type="button"
@@ -354,7 +354,7 @@ export function QuizEditor({
             <div className="mt-5">
               <label className="field-label" htmlFor="q-image">
                 Image URL{" "}
-                <span className="font-normal text-navy-500">
+                <span className="font-normal text-ink-muted">
                   (optional, https)
                 </span>
               </label>
@@ -373,7 +373,7 @@ export function QuizEditor({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     alt=""
-                    className="size-11 shrink-0 rounded-lg border border-oat-300 object-cover"
+                    className="size-11 shrink-0 rounded-lg border border-rule object-cover"
                     src={current.image_url}
                   />
                 )}
@@ -383,7 +383,7 @@ export function QuizEditor({
             <fieldset className="mt-6">
               <legend className="field-label">
                 Answers{" "}
-                <span className="font-normal text-navy-500">
+                <span className="font-normal text-ink-muted">
                   · tick the correct ones
                 </span>
               </legend>
@@ -392,7 +392,7 @@ export function QuizEditor({
                   const style = ANSWER_STYLES[i]!;
                   return (
                     <div
-                      className={`flex items-center gap-3 rounded-[var(--radius-tile)] border-2 bg-white p-2 pl-3 transition-colors ${c.is_correct ? "border-green-600" : "border-oat-300"}`}
+                      className={`flex items-center gap-3 rounded-[var(--radius-tile)] border-2 bg-surface p-2 pl-3 transition-colors ${c.is_correct ? "border-q-olive" : "border-rule"}`}
                       key={c.id}
                     >
                       <span
@@ -402,7 +402,7 @@ export function QuizEditor({
                       </span>
                       <input
                         aria-label={`Answer ${i + 1} (${style.name})`}
-                        className="min-w-0 flex-1 bg-transparent py-2 font-medium outline-none placeholder:font-normal placeholder:text-navy-500"
+                        className="min-w-0 flex-1 bg-transparent py-2 font-medium outline-none placeholder:font-normal placeholder:text-ink-muted"
                         maxLength={120}
                         onChange={(e) => {
                           const body = e.currentTarget.value;
@@ -416,10 +416,10 @@ export function QuizEditor({
                         readOnly={current.kind === "truefalse"}
                         value={c.body}
                       />
-                      <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-semibold text-navy-500 hover:bg-oat-200">
+                      <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-semibold text-ink-muted hover:bg-sunken">
                         <input
                           checked={c.is_correct}
-                          className="size-4 accent-green-600"
+                          className="size-4 accent-q-olive"
                           onChange={(e) => {
                             const checked = e.currentTarget.checked;
                             updateQuestion({

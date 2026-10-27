@@ -1,40 +1,41 @@
 @import "tailwindcss";
 
-/* PopQuiz design tokens. Databricks palette, light only: Oat ground, Navy ink, Lava as the one action
-   color, and an answer quartet that always travels with its shape. Contrast-checked pairs:
-   lava-600 + white 4.9:1 (small text), lava + white 3.6:1 (large text only), blue + white 5.1:1,
-   gold + navy 7.2:1, green-600 + white 4.6:1, navy-500 on oat 4.9:1. */
+/* PopQuiz design tokens. Warm muted, light only: a parchment ground, warm charcoal ink, terracotta as the
+   one action color, and an answer quartet (terracotta, dusty teal, ochre, olive) that always travels with
+   its shape. Colors are semantic so the palette lives here. Contrast-checked pairs: action + white 5.2:1,
+   q-teal + white 6.0:1, q-ochre + ink 5.8:1, q-olive + white 5.3:1, ink-muted on ground 4.9:1,
+   action-strong on action-soft 5.4:1. */
 @theme {
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-dm-mono), ui-monospace, monospace;
 
-  --color-oat: #f9f7f4;
-  --color-oat-200: #eeede9;
-  --color-oat-300: #e2dfd8;
-  --color-navy: #1b3139;
-  --color-navy-700: #2f4a54;
-  --color-navy-500: #5a6f77;
-  --color-lava: #ff3621;
-  --color-lava-600: #db2b12;
-  --color-lava-50: #fff0ed;
-  --color-blue: #2272b4;
-  --color-gold: #ffab00;
-  --color-green: #00a972;
-  --color-green-600: #00875c;
-  --color-green-50: #e6f6f0;
+  --color-ground: #f4eee4;
+  --color-surface: #fbf8f2;
+  --color-sunken: #ede5d8;
+  --color-rule: #e3dacb;
+  --color-ink: #2e2a27;
+  --color-ink-soft: #45403b;
+  --color-ink-muted: #6e655c;
+  --color-action: #b8482e;
+  --color-action-strong: #9e3b24;
+  --color-action-soft: #f3e0d6;
+  --color-q-terracotta: #b8482e;
+  --color-q-teal: #2f6b78;
+  --color-q-ochre: #d69a2d;
+  --color-q-olive: #5e7334;
 
   --radius-tile: 14px;
   --shadow-lift:
-    0 1px 2px rgb(27 49 57 / 0.06), 0 8px 24px -12px rgb(27 49 57 / 0.18);
+    0 1px 2px rgb(46 42 39 / 0.06), 0 8px 24px -12px rgb(46 42 39 / 0.2);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root {
   color-scheme: light;
-  background: var(--color-oat);
-  color: var(--color-navy);
-  accent-color: var(--color-lava-600);
-  caret-color: var(--color-lava-600);
+  background: var(--color-ground);
+  color: var(--color-ink);
+  accent-color: var(--color-action);
+  caret-color: var(--color-action);
 }
 
 body {
@@ -45,20 +46,20 @@ body {
 }
 
 ::selection {
-  background: var(--color-lava);
+  background: var(--color-action);
   color: white;
 }
 
 /* In the base layer so utilities (focus-visible:outline-none on fields that show focus by border) win. */
 @layer base {
   :focus-visible {
-    outline: 2px solid var(--color-lava-600);
+    outline: 2px solid var(--color-action);
     outline-offset: 2px;
   }
 }
 
 * {
-  scrollbar-color: var(--color-oat-300) transparent;
+  scrollbar-color: var(--color-rule) transparent;
 }
 
 h1,
@@ -68,41 +69,46 @@ h3 {
   letter-spacing: -0.03em;
 }
 
+/* Short landscape phones: the player screen trades its tall stack for a row. */
+@custom-variant short (@media (orientation: landscape) and (max-height: 500px));
+/* Host stage locks to one viewport only when there is room for it: wide and tall enough. */
+@custom-variant stage (@media (min-width: 64rem) and (min-height: 37.5rem));
+
 /* Numerals in scores, timers and PINs line up. */
 .tabular {
   font-variant-numeric: tabular-nums;
 }
 
 @utility btn {
-  @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold transition-[background-color,color,transform] duration-150 select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+  @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-[0.9375rem] font-semibold whitespace-nowrap transition-[background-color,color,transform] duration-150 select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
 }
 @utility btn-primary {
-  @apply btn bg-lava-600 text-white hover:bg-[#c42510] disabled:bg-oat-300 disabled:text-navy-500 disabled:opacity-100;
+  @apply btn bg-action text-white hover:bg-action-strong disabled:bg-rule disabled:text-ink-muted disabled:opacity-100;
 }
 @utility btn-dark {
-  @apply btn bg-navy text-white hover:bg-navy-700;
+  @apply btn bg-ink text-white hover:bg-ink-soft;
 }
 @utility btn-quiet {
-  @apply btn border border-oat-300 bg-white text-navy hover:bg-oat-200;
+  @apply btn border border-rule bg-surface text-ink hover:bg-sunken;
 }
 @utility btn-ghost {
-  @apply btn px-3 text-navy-500 hover:bg-oat-200 hover:text-navy;
+  @apply btn px-3 text-ink-muted hover:bg-sunken hover:text-ink;
 }
 @utility btn-lg {
   @apply min-h-14 rounded-2xl px-6 text-lg;
 }
 
 @utility field-label {
-  @apply mb-1.5 block text-sm font-semibold text-navy;
+  @apply mb-1.5 block text-sm font-semibold text-ink;
 }
 @utility input {
-  @apply w-full rounded-xl border border-oat-300 bg-white px-3.5 py-2.5 text-navy transition-colors outline-none placeholder:text-navy-500 hover:border-navy-500/40 focus:border-lava-600 focus:ring-3 focus:ring-lava/15;
+  @apply w-full rounded-xl border border-rule bg-surface px-3.5 py-2.5 text-ink transition-colors outline-none placeholder:text-ink-muted hover:border-ink-muted/40 focus:border-action focus:ring-3 focus:ring-action/15;
 }
 @utility surface {
-  @apply rounded-2xl border border-oat-300 bg-white;
+  @apply rounded-2xl border border-rule bg-surface;
 }
 @utility notice-error {
-  @apply rounded-xl bg-lava-50 px-3.5 py-2.5 text-sm text-lava-600;
+  @apply rounded-xl bg-action-soft px-3.5 py-2.5 text-sm text-action-strong;
 }
 
 /* Motion: one authored grammar. Things rise into place from already-visible states. */
@@ -115,6 +121,11 @@ h3 {
 @keyframes grow-up {
   from {
     transform: scaleY(0);
+  }
+}
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
   }
 }
 @keyframes pop {
@@ -131,6 +142,9 @@ h3 {
 .animate-grow-up {
   transform-origin: bottom;
   animation: grow-up 0.9s var(--ease-out-expo) both;
+}
+.animate-grow-x {
+  animation: grow-x 0.9s var(--ease-out-expo) both;
 }
 .animate-pop {
   animation: pop 0.45s var(--ease-out-expo) both;

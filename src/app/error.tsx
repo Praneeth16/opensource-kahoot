@@ -13,7 +13,7 @@ export default function Error({
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-5 text-center">
       <h1 className="text-3xl font-bold">Something went wrong</h1>
-      <p className="max-w-md text-navy-500">
+      <p className="max-w-md text-ink-muted">
         We couldn&apos;t load this page. Check your connection and try again.
       </p>
       <button

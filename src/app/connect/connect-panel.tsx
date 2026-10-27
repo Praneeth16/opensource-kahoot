@@ -69,7 +69,7 @@ function CopyBlock({
       <div className="mb-1.5 flex items-center justify-between">
         <h3 className="text-sm font-semibold">{label}</h3>
         <button
-          className="btn-ghost min-h-8 text-sm"
+          className="btn-ghost min-h-8 text-sm pointer-coarse:min-h-11"
           onClick={async () => {
             await navigator.clipboard.writeText(code);
             setCopied(true);
@@ -80,10 +80,10 @@ function CopyBlock({
           <Icon name={copied ? "check" : "copy"} /> {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto rounded-xl bg-navy px-4 py-3 font-mono text-sm leading-relaxed text-oat">
+      <pre className="overflow-x-auto rounded-xl bg-ink px-4 py-3 font-mono text-sm leading-relaxed text-ground">
         {code}
       </pre>
-      {note && <p className="mt-1.5 text-sm text-navy-500">{note}</p>}
+      {note && <p className="mt-1.5 text-sm text-ink-muted">{note}</p>}
     </div>
   );
 }
@@ -109,7 +109,7 @@ export function ConnectPanel({ mcpUrl }: { mcpUrl: string }) {
     <>
       <section className="surface mt-8 p-5 lg:p-7">
         <h2 className="text-xl font-bold">1. Create a token</h2>
-        <p className="mt-1 text-sm text-navy-500">
+        <p className="mt-1 text-sm text-ink-muted">
           It lets the assistant manage your quizzes. Make one per device, and
           revoke it here if it leaks.
         </p>
@@ -150,7 +150,7 @@ export function ConnectPanel({ mcpUrl }: { mcpUrl: string }) {
 
       <section className="mt-8">
         <h2 className="text-xl font-bold">2. Add PopQuiz to your assistant</h2>
-        <p className="mt-1 mb-5 text-sm text-navy-500">
+        <p className="mt-1 mb-5 text-sm text-ink-muted">
           Server URL <span className="font-mono">{mcpUrl}</span>
           {token
             ? ". Your token is filled in below."

@@ -29,11 +29,14 @@ export default async function HostPage({
   const qrSvg = await QRCode.toString(joinUrl, {
     type: "svg",
     margin: 0,
-    color: { dark: "#1b3139", light: "#0000" },
+    color: { dark: "#2e2a27", light: "#0000" },
   });
 
   return (
     <RealtimeRoot key={gameId} url={getEnv().realtimeUrl}>
+      {/* The host screen is a stage: scale every rem with the viewport (the smaller of width and height),
+          so one layout fits 1280×720 laptops, 1080p projectors and 4K TVs. Phones and tablets keep 16px. */}
+      <style>{`html { font-size: clamp(16px, min(1.25vw, 2.2vh), 48px); }`}</style>
       <HostGame
         gameId={gameId}
         host={origin.replace(/^https?:\/\//, "")}

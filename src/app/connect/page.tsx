@@ -23,12 +23,12 @@ export default async function ConnectPage() {
       <AppHeader email={user.email} />
       <main className="mx-auto w-full max-w-3xl px-5 py-10">
         <h1 className="text-4xl font-bold">Use PopQuiz from an AI assistant</h1>
-        <p className="mt-3 max-w-2xl text-navy-500">
+        <p className="mt-3 max-w-2xl text-ink-muted">
           Connect Claude, Codex, Cursor or any MCP client, then ask it to write
           a quiz, host it, or read the results. A person still runs the game on
           the big screen.
         </p>
-        <p className="mt-4 rounded-xl bg-oat-200 px-4 py-3 text-sm">
+        <p className="mt-4 rounded-xl bg-sunken px-4 py-3 text-sm">
           Try:{" "}
           <em>
             “Create a 10-question quiz about the solar system, mix in a few true
@@ -41,26 +41,26 @@ export default async function ConnectPage() {
         <section className="mt-12">
           <h2 className="mb-3 text-xl font-bold">Your tokens</h2>
           {tokens.length === 0 ? (
-            <p className="text-navy-500">No tokens yet.</p>
+            <p className="text-ink-muted">No tokens yet.</p>
           ) : (
-            <ul className="surface divide-y divide-oat-300">
+            <ul className="surface divide-y divide-rule">
               {tokens.map((t) => (
                 <li
                   className="flex flex-wrap items-center gap-x-6 gap-y-1 px-5 py-3"
                   key={t.id}
                 >
                   <span className="min-w-0 flex-1 font-semibold">{t.name}</span>
-                  <span className="font-mono text-sm text-navy-500">
+                  <span className="font-mono text-sm text-ink-muted">
                     {t.prefix}…
                   </span>
-                  <span className="tabular text-sm text-navy-500">
+                  <span className="tabular text-sm text-ink-muted">
                     {t.last_used_at
                       ? `Last used ${t.last_used_at.toLocaleDateString("en", { month: "short", day: "numeric" })}`
                       : "Never used"}
                   </span>
                   <form action={revokeToken.bind(null, t.id)}>
                     <button
-                      className="btn-ghost hover:text-lava-600"
+                      className="btn-ghost hover:text-action"
                       type="submit"
                     >
                       Revoke

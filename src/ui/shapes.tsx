@@ -3,27 +3,23 @@
 export const ANSWER_STYLES = [
   {
     name: "Triangle",
-    tile: "bg-lava text-white",
-    ring: "ring-lava",
-    bar: "bg-lava",
+    tile: "bg-q-terracotta text-white",
+    ring: "ring-q-terracotta",
   },
   {
     name: "Diamond",
-    tile: "bg-blue text-white",
-    ring: "ring-blue",
-    bar: "bg-blue",
+    tile: "bg-q-teal text-white",
+    ring: "ring-q-teal",
   },
   {
     name: "Circle",
-    tile: "bg-gold text-navy",
-    ring: "ring-gold",
-    bar: "bg-gold",
+    tile: "bg-q-ochre text-ink",
+    ring: "ring-q-ochre",
   },
   {
     name: "Square",
-    tile: "bg-green-600 text-white",
-    ring: "ring-green-600",
-    bar: "bg-green-600",
+    tile: "bg-q-olive text-white",
+    ring: "ring-q-olive",
   },
 ] as const;
 
@@ -57,16 +53,16 @@ export function Shape({
 export function Mark({ className = "size-7" }: { className?: string }) {
   return (
     <svg aria-hidden="true" className={className} viewBox="0 0 32 32">
-      <path d="M8 2.5 14 13H2z" fill="var(--color-lava)" />
-      <path d="M24 1.5 30 7.5 24 13.5 18 7.5z" fill="var(--color-blue)" />
-      <circle cx="8" cy="24" r="6" fill="var(--color-gold)" />
+      <path d="M8 2.5 14 13H2z" fill="var(--color-q-terracotta)" />
+      <path d="M24 1.5 30 7.5 24 13.5 18 7.5z" fill="var(--color-q-teal)" />
+      <circle cx="8" cy="24" r="6" fill="var(--color-q-ochre)" />
       <rect
         x="18.5"
         y="18.5"
         width="11"
         height="11"
         rx="1.5"
-        fill="var(--color-green-600)"
+        fill="var(--color-q-olive)"
       />
     </svg>
   );
@@ -74,9 +70,9 @@ export function Mark({ className = "size-7" }: { className?: string }) {
 
 export function Wordmark() {
   return (
-    <span className="inline-flex items-center gap-2 text-lg font-bold tracking-[-0.03em] text-navy">
+    <span className="inline-flex min-h-11 items-center gap-2 text-lg font-bold tracking-[-0.03em] text-ink">
       <Mark className="size-6" />
-      PopQuiz
+      <span className="max-[380px]:sr-only">PopQuiz</span>
     </span>
   );
 }

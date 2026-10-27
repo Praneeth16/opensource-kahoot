@@ -21,8 +21,8 @@ export default async function AuthPage({
           <Wordmark />
         </Link>
       </header>
-      <main className="flex flex-1 flex-col items-center justify-center px-4 pb-16">
-        <p className="mb-6 max-w-sm text-center text-navy-500">
+      <main className="auth-touch flex flex-1 flex-col items-center justify-center px-4 pb-16">
+        <p className="mb-6 max-w-sm text-center text-ink-muted">
           Hosts sign in to write and run quizzes. Players don&apos;t need an
           account.
         </p>

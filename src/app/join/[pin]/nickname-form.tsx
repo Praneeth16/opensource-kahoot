@@ -31,7 +31,7 @@ export function NicknameForm({ pin }: { pin: string }) {
         aria-invalid={error ? true : undefined}
         autoComplete="nickname"
         autoFocus
-        className="h-16 w-full rounded-2xl border-2 border-oat-300 bg-white text-center text-2xl font-semibold text-navy shadow-lift outline-none placeholder:font-normal placeholder:text-navy-500/60 focus:border-navy focus-visible:outline-none"
+        className="h-16 w-full rounded-2xl border-2 border-rule bg-surface text-center text-2xl font-semibold text-ink shadow-lift outline-none placeholder:font-normal placeholder:text-ink-muted/60 focus:border-ink focus-visible:outline-none"
         id="nickname"
         maxLength={20}
         onChange={(e) => setNickname(e.currentTarget.value)}
@@ -47,7 +47,7 @@ export function NicknameForm({ pin }: { pin: string }) {
       </button>
       <p
         aria-live="polite"
-        className="min-h-5 text-center text-sm text-lava-600"
+        className="min-h-5 text-center text-sm text-action"
         id="nickname-error"
       >
         {error}
