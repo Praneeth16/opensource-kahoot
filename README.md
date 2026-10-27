@@ -4,8 +4,6 @@ An open-source live quiz game, like Kahoot, built on [Neon](https://neon.com). H
 
 **Live demo:** https://opensource-kahoot.vercel.app
 
-It is inspired by the Supabase community's [kahoot-alternative](https://github.com/supabase-community/kahoot-alternative). This version uses Neon for everything on the backend.
-
 | Host screen                                                    | Player phone                                            |
 | -------------------------------------------------------------- | ------------------------------------------------------- |
 | ![Lobby with PIN and QR code](docs/screenshots/host-lobby.png) | ![Answer buttons](docs/screenshots/player-question.png) |
