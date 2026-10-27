@@ -98,8 +98,10 @@ export const queries = {
   // Host only: answers per choice, live while the question is open.
   tally: (gameId: string) =>
     live<TallyRow>(
-      `SELECT question_id, choice_id, count(*)::int AS n FROM answers
-       WHERE game_id = $1::uuid GROUP BY question_id, choice_id`,
+      // Kicked players' answers don't count, or they'd end a question before everyone left has answered.
+      `SELECT a.question_id, a.choice_id, count(*)::int AS n FROM answers a
+       JOIN players p ON p.id = a.player_id AND NOT p.kicked
+       WHERE a.game_id = $1::uuid GROUP BY a.question_id, a.choice_id`,
       [gameId],
     ),
 

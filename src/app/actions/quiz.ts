@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, inArray, ne, notInArray, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, notInArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -51,20 +51,15 @@ export async function saveQuiz(raw: QuizInput): Promise<SaveResult> {
             description: doc.description,
             updated_at: sql`now()`,
           },
-          setWhere: eq(quizzes.owner_id, user.id),
+          setWhere: and(
+            eq(quizzes.owner_id, user.id),
+            isNull(quizzes.source_quiz_id),
+          ),
         })
         .returning({ id: quizzes.id });
       if (!own) throw new Rejected("This quiz belongs to someone else.");
 
-      const [live] = await tx
-        .select({ id: games.id })
-        .from(games)
-        .where(and(eq(games.quiz_id, doc.id), ne(games.phase, "ended")))
-        .limit(1);
-      if (live)
-        throw new Rejected(
-          "End the running game of this quiz before editing it.",
-        );
+      // No running-game check: games play a snapshot (createGame), so editing is always safe.
 
       const questionIds = doc.questions.map((q) => q.id);
       await tx

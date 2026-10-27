@@ -67,24 +67,41 @@ export async function joinGame(raw: {
     return { kind: "rejected", reason: "The host has locked this game." };
 
   const { token, tokenHash } = newPlayerToken();
+  const client = await pool.connect();
+  let playerId: string | undefined;
   try {
-    const { rows } = await pool.query<{ id: string }>(
-      `INSERT INTO players (game_id, nickname, token_hash)
-       SELECT $1, $2, $3
-       WHERE (SELECT count(*) FROM players WHERE game_id = $1 AND NOT kicked) < $4
-       RETURNING id`,
-      [game.id, nickname, tokenHash, MAX_PLAYERS],
+    await client.query("BEGIN");
+    // Lock the game row first, in its own statement, so lock/end/capacity are read after any
+    // concurrent join or host action has committed: joins at the cap queue instead of overshooting.
+    const { rowCount } = await client.query(
+      "SELECT 1 FROM games WHERE id = $1 AND phase <> 'ended' AND NOT locked FOR UPDATE",
+      [game.id],
     );
-    if (!rows[0]) return { kind: "rejected", reason: "This game is full." };
-    await setPlayerCookie(game.id, rows[0].id, token);
+    if (rowCount) {
+      const { rows } = await client.query<{ id: string }>(
+        `INSERT INTO players (game_id, nickname, token_hash)
+         SELECT $1, $2, $3
+         WHERE (SELECT count(*) FROM players WHERE game_id = $1 AND NOT kicked) < $4
+         RETURNING id`,
+        [game.id, nickname, tokenHash, MAX_PLAYERS],
+      );
+      playerId = rows[0]?.id;
+    }
+    await client.query("COMMIT");
   } catch (error) {
+    await client.query("ROLLBACK");
     if ((error as { code?: string }).code === "23505")
       return {
         kind: "rejected",
         reason: "That nickname is taken. Pick another.",
       };
     throw error;
+  } finally {
+    client.release();
   }
+  if (!playerId)
+    return { kind: "rejected", reason: "This game is locked, ended or full." };
+  await setPlayerCookie(game.id, playerId, token);
   return { kind: "joined", gameId: game.id };
 }
 
@@ -109,9 +126,12 @@ export async function submitAnswer(
        SELECT g.id AS game_id, q.id AS question_id, c.id AS choice_id, c.is_correct, q.points, q.time_limit_s,
          extract(epoch FROM (clock_timestamp() - g.question_started_at)) AS elapsed
        FROM games g
+       JOIN players pl ON pl.id = $2 AND pl.game_id = g.id AND NOT pl.kicked
        JOIN questions q ON q.quiz_id = g.quiz_id AND q.position = g.question_index
        JOIN choices c ON c.question_id = q.id AND c.id = $3
        WHERE g.id = $1 AND g.phase = 'question'
+       -- Waits for a concurrent reveal/end/kick to commit, then re-checks the rows: no answer lands late.
+       FOR SHARE OF g, pl
      )
      INSERT INTO answers (game_id, player_id, question_id, choice_id, is_correct, points, answered_ms)
      SELECT game_id, $2, question_id, choice_id, is_correct,

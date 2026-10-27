@@ -74,25 +74,34 @@ export function HostGame({
   const [error, setError] = useState<string | null>(null);
 
   // Host writes are guarded on the phase and index the screen shows; wait until the game row reflects
-  // the write so a second click can't race the first.
+  // the write so a second click can't race the first. Resolves true once the write is committed.
   function run(write: () => Promise<WriteResult>) {
-    setError(null);
-    startTransition(async () => {
-      try {
-        const result = await write();
-        if (result.kind === "rejected") {
-          if (result.reason === "UNAUTHENTICATED") leaveSession("/dashboard");
-          else setError("That didn't work. Try again.");
-          return;
+    return new Promise<boolean>((resolve) =>
+      startTransition(async () => {
+        try {
+          const result = await write();
+          if (result.kind === "rejected") {
+            if (result.reason === "UNAUTHENTICATED") leaveSession("/dashboard");
+            else setError("That didn't work. Try again.");
+            return resolve(false);
+          }
+          if (result.kind === "committed") {
+            try {
+              await gameLive.utils.awaitTxId(result.txid, SYNC_TIMEOUT_MS);
+              setError(null); // cleared only once a write is confirmed live, not by the next click
+            } catch {
+              setError(
+                "Saved, but live updates are lagging. Reload this page if it doesn't change.",
+              );
+            }
+          }
+          resolve(true);
+        } catch {
+          setError("Connection lost. Check your network and try again.");
+          resolve(false);
         }
-        if (result.kind === "committed")
-          await gameLive.utils
-            .awaitTxId(result.txid, SYNC_TIMEOUT_MS)
-            .catch(() => {});
-      } catch {
-        setError("Connection lost. Check your network and try again.");
-      }
-    });
+      }),
+    );
   }
 
   const answered = question
@@ -111,12 +120,22 @@ export function HostGame({
     game.phase === "question" &&
     !!question &&
     (left <= 0 || (players.length > 0 && answered >= players.length));
+  // A failed reveal (network blip) clears the mark and retries after a pause, so a question whose
+  // time is up can't stay open waiting for the host.
+  const [revealRetry, setRevealRetry] = useState(0);
   useEffect(() => {
     if (!shouldReveal || autoRevealed.current === game.question_index) return;
-    autoRevealed.current = game.question_index;
-    run(() => revealAnswer(gameId, userId, game.question_index));
+    const index = game.question_index;
+    autoRevealed.current = index;
+    void run(() => revealAnswer(gameId, userId, index)).then((ok) => {
+      if (ok) return;
+      setTimeout(() => {
+        if (autoRevealed.current === index) autoRevealed.current = -1;
+        setRevealRetry((n) => n + 1);
+      }, 2000);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldReveal, game.question_index]);
+  }, [shouldReveal, game.question_index, revealRetry]);
 
   const isLast = game.question_index + 1 >= game.question_count;
   const next = () =>

@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  type AnyPgColumn,
   boolean,
   index,
   integer,
@@ -26,12 +27,21 @@ export const quizzes = pgTable(
     owner_id: uuid("owner_id").notNull(),
     title: text("title").notNull(),
     description: text("description").notNull().default(""),
+    // Set on the frozen copy a game plays (see createGame). Editing the original never touches a game
+    // that is running or already played; deleting it deletes its snapshots and their games.
+    source_quiz_id: uuid("source_quiz_id").references(
+      (): AnyPgColumn => quizzes.id,
+      { onDelete: "cascade" },
+    ),
     created_at: createdAt(),
     updated_at: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
   },
-  (t) => [index("quizzes_owner_idx").on(t.owner_id, t.updated_at)],
+  (t) => [
+    index("quizzes_owner_idx").on(t.owner_id, t.updated_at),
+    index("quizzes_source_idx").on(t.source_quiz_id),
+  ],
 );
 
 export const questions = pgTable(

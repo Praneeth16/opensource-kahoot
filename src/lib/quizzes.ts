@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 
 import { getDb } from "./db";
 import type { QuizInput } from "./quiz-input";
@@ -15,10 +15,10 @@ export async function listQuizzes(ownerId: string) {
       updated_at: quizzes.updated_at,
       // Raw "quizzes"."id": an interpolated column compiles unqualified and would resolve to q.id.
       question_count: sql<number>`(SELECT count(*)::int FROM questions q WHERE q.quiz_id = "quizzes"."id")`,
-      play_count: sql<number>`(SELECT count(*)::int FROM games g WHERE g.quiz_id = "quizzes"."id")`,
+      play_count: sql<number>`(SELECT count(*)::int FROM games g JOIN quizzes s ON s.id = g.quiz_id WHERE s.source_quiz_id = "quizzes"."id")`,
     })
     .from(quizzes)
-    .where(eq(quizzes.owner_id, ownerId))
+    .where(and(eq(quizzes.owner_id, ownerId), isNull(quizzes.source_quiz_id)))
     .orderBy(desc(quizzes.updated_at));
 }
 
@@ -48,7 +48,13 @@ export async function getQuizDocument(
   const [quiz] = await db
     .select()
     .from(quizzes)
-    .where(and(eq(quizzes.id, quizId), eq(quizzes.owner_id, ownerId)));
+    .where(
+      and(
+        eq(quizzes.id, quizId),
+        eq(quizzes.owner_id, ownerId),
+        isNull(quizzes.source_quiz_id), // a game's snapshot is not editable
+      ),
+    );
   if (!quiz) return null;
   const qs = await db
     .select()
