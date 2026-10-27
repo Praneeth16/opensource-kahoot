@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { createGame } from "@/app/actions/game";
 import { saveQuiz } from "@/app/actions/quiz";
 import {
+  blankQuestion,
   type QuestionInput,
   type QuizInput,
   TIME_LIMITS,
@@ -15,26 +16,6 @@ import { Icon } from "@/ui/icons";
 import { ANSWER_STYLES, Shape } from "@/ui/shapes";
 
 const id = () => crypto.randomUUID();
-
-export function blankQuestion(
-  kind: "quiz" | "truefalse" = "quiz",
-): QuestionInput {
-  return {
-    id: id(),
-    kind,
-    body: "",
-    image_url: "",
-    time_limit_s: kind === "truefalse" ? 10 : 20,
-    points: "standard",
-    choices:
-      kind === "truefalse"
-        ? [
-            { id: id(), body: "True", is_correct: true },
-            { id: id(), body: "False", is_correct: false },
-          ]
-        : [0, 1, 2, 3].map(() => ({ id: id(), body: "", is_correct: false })),
-  };
-}
 
 /** Blank optional answers (3rd and 4th) are dropped rather than blocking a save. */
 function normalize(q: QuestionInput): QuestionInput {

@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/auth/server";
 import { AppHeader } from "@/ui/app-header";
 
-import { blankQuestion, QuizEditor } from "../quiz-editor";
+import { blankQuestion } from "@/lib/quiz-input";
+
+import { QuizEditor } from "../quiz-editor";
 
 // Reads the session cookie: render per request, never at build.
 export const dynamic = "force-dynamic";

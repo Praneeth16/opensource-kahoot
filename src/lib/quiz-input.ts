@@ -45,3 +45,28 @@ export const quizInput = z.object({
 
 export type QuizInput = z.input<typeof quizInput>;
 export type QuestionInput = QuizInput["questions"][number];
+
+/** A new, empty question. Shared by the editor and the server-rendered "new quiz" page. */
+export function blankQuestion(
+  kind: "quiz" | "truefalse" = "quiz",
+): QuestionInput {
+  return {
+    id: crypto.randomUUID(),
+    kind,
+    body: "",
+    image_url: "",
+    time_limit_s: kind === "truefalse" ? 10 : 20,
+    points: "standard",
+    choices:
+      kind === "truefalse"
+        ? [
+            { id: crypto.randomUUID(), body: "True", is_correct: true },
+            { id: crypto.randomUUID(), body: "False", is_correct: false },
+          ]
+        : [0, 1, 2, 3].map(() => ({
+            id: crypto.randomUUID(),
+            body: "",
+            is_correct: false,
+          })),
+  };
+}
