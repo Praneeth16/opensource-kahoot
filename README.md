@@ -48,6 +48,16 @@ npm run db:push                                            # creates the tables
 npm run dev                                                # http://localhost:3000
 ```
 
+### Social sign-in
+
+Hosts can sign in with Google out of the box: Neon enables it on every branch with shared credentials. Those show Neon's name on Google's consent screen, so use your own Google OAuth app for production. GitHub and Vercel sign-in always need your own OAuth app.
+
+1. Create the OAuth app with the provider. Set its callback (redirect) URI to `{NEON_AUTH_BASE_URL}/callback/{provider}`, for example `.../neondb/auth/callback/github`.
+2. Add it to the branch: `neon neon-auth oauth-provider add --provider-id github --oauth-client-id <id> --oauth-client-secret <secret>`.
+3. List it for the sign-in page: `NEXT_PUBLIC_OAUTH_PROVIDERS=google,github` (default `google`), locally in `.env.local` and on Vercel.
+
+See Neon's [Set up OAuth](https://neon.com/docs/auth/guides/setup-oauth) guide for details.
+
 Next.js must run on port 3000, because that is the origin Realtime allows in `neon.ts`. If port 3000 is busy, the live screens stay stuck on connecting.
 
 ## Deploy to Vercel
