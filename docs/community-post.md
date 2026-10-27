@@ -20,6 +20,8 @@ Hi everyone. Our Kahoot license ran out, so we built our own live quiz game on N
 - **Realtime** drives every live screen with six live SQL queries. The server seals each one after checking the host session or the player's cookie. The correct answer and the scores are masked in SQL with a `CASE` on the game phase until the reveal, so reading the network traffic doesn't give the answer away. Each write returns `pg_current_xact_id()`, and the client waits on `awaitTxId()`, so the host's buttons and the players' phones stay in step.
 - **Functions** host a small janitor on a 15-minute schedule trigger. It ends games the host abandoned and cleans up lobbies that never started.
 
+**Works with AI assistants.** PopQuiz is also an MCP server (`/api/mcp`). Create a token in the app, add it to Claude Code, Codex or Cursor, and ask: "Create a 10-question quiz about the solar system, then host it." The assistant writes the quiz and opens the lobby, and you run the game.
+
 The app is Next.js 16 on Vercel, with Drizzle and `node-postgres`. Setup is `neon init`, `neon deploy`, `npm run db:push`, then `npm run dev`.
 
 **One thing we learned.** Two live queries that depend on each other (the game row and the current question) can arrive at the client a moment apart. We put the question's position in its live row and only act when it matches the game's current index. Before that fix, the host screen sometimes auto-revealed a new question the instant it opened.
